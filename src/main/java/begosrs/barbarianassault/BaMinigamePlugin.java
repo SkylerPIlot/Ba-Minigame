@@ -290,10 +290,10 @@ public class BaMinigamePlugin extends Plugin
 		callToMenuEntry.put("Red egg", "Tell-red");
 		callToMenuEntry.put("Green egg", "Tell-green");
 		callToMenuEntry.put("Blue egg", "Tell-blue");
-		callToMenuEntry.put("Style 1", "Tell-style1");
-		callToMenuEntry.put("Style 2", "Tell-style2");
-		callToMenuEntry.put("Style 3", "Tell-style3");
-		callToMenuEntry.put("Style 4", "Tell-style4");
+		callToMenuEntry.put("Controlled/Bullet/Wind", "Tell-controlled");
+		callToMenuEntry.put("Accurate/Field/Water", "Tell-accurate");
+		callToMenuEntry.put("Aggressive/Blunt/Earth", "Tell-aggressive");
+		callToMenuEntry.put("Defensive/Barbed/Fire", "Tell-defensive");
 		callToMenuEntry.put("Tofu", "Tell-tofu");
 		callToMenuEntry.put("Crackers", "Tell-crackers");
 		callToMenuEntry.put("Worms", "Tell-worms");
