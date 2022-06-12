@@ -293,6 +293,24 @@ public interface BaMinigameConfig extends Config
 	}
 
 	@ConfigItem(
+			keyName = "highlightCall",
+			name = "Horn call highlght",
+			description = "Configures whether or not to highlight call options",
+			section = inGameSection,
+			position = 13
+	)
+	default boolean highlightCall() { return false; }
+
+	@ConfigItem(
+			keyName = "highlightCallColor",
+			name = "Hightlight call color",
+			description = "Configures the color to highlight the horn call options",
+			section = inGameSection,
+			position = 14
+	)
+	default Color highlightCallColor() { return Color.green; }
+
+	@ConfigItem(
 			  keyName = "highlightArrows",
 			  name = "Highlight arrows",
 			  description = "Highlights arrows called by your teammate",

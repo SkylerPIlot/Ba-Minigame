@@ -199,6 +199,7 @@ public class BaMinigamePlugin extends Plugin
 	@Getter
 	private final Map<Role, Integer> rolePoints = new EnumMap<>(Role.class);
 	private final Map<Role, RolePointsInfoBox> rolePointsInfoBoxes = new EnumMap<>(Role.class);
+	private final Map<String, String> callToMenuEntry = new HashMap<>();
 	private final Role[] playerRoles = new Role[5];
 	@Inject
 	private Client client;
@@ -285,6 +286,20 @@ public class BaMinigamePlugin extends Plugin
 		images.put("defender", ImageUtil.loadImageResource(getClass(), "/defender.png"));
 		images.put("collector", ImageUtil.loadImageResource(getClass(), "/collector.png"));
 		images.put("healer", ImageUtil.loadImageResource(getClass(), "/healer.png"));
+
+		callToMenuEntry.put("Red egg", "Tell-red");
+		callToMenuEntry.put("Green egg", "Tell-green");
+		callToMenuEntry.put("Blue egg", "Tell-blue");
+		callToMenuEntry.put("Style 1", "Tell-style1");
+		callToMenuEntry.put("Style 2", "Tell-style2");
+		callToMenuEntry.put("Style 3", "Tell-style3");
+		callToMenuEntry.put("Style 4", "Tell-style4");
+		callToMenuEntry.put("Tofu", "Tell-tofu");
+		callToMenuEntry.put("Crackers", "Tell-crackers");
+		callToMenuEntry.put("Worms", "Tell-worms");
+		callToMenuEntry.put("Pois. Tofu", "Tell-tofu");
+		callToMenuEntry.put("Pois. Worms", "Tell-worms");
+		callToMenuEntry.put("Pois. Meat", "Tell-meat");
 
 		overlayManager.add(waveInfoOverlay);
 		overlayManager.add(inventoryOverlay);
@@ -574,7 +589,6 @@ public class BaMinigamePlugin extends Plugin
 				break;
 		}
 	}
-
 
 	@Subscribe
 	public void onWidgetLoaded(WidgetLoaded event)
@@ -1069,6 +1083,40 @@ public class BaMinigamePlugin extends Plugin
 		}
 	}
 
+	private void handleHighlightCall(Role role, MenuEntry entry)
+	{
+		if (config.highlightCall())
+		{
+			BaWidgetInfo toCallWidgetInfo = null;
+			switch(role)
+			{
+				case ATTACKER:
+					toCallWidgetInfo = BaWidgetInfo.BA_ATTACKER_CALL_TEXT;
+					break;
+				case HEALER:
+					toCallWidgetInfo = BaWidgetInfo.BA_HEALER_CALL_TEXT;
+					break;
+				case DEFENDER:
+					toCallWidgetInfo = BaWidgetInfo.BA_DEFENDER_CALL_TEXT;
+					break;
+				case COLLECTOR:
+					toCallWidgetInfo = BaWidgetInfo.BA_COLLECTOR_CALL_TEXT;
+					break;
+			}
+			if(toCallWidgetInfo != null)
+			{
+				Widget toCallWidget = client.getWidget(toCallWidgetInfo.getGroupId(), toCallWidgetInfo.getChildId());
+				if(toCallWidget != null)
+				{
+					if(entry.getOption().equals(callToMenuEntry.get(toCallWidget.getText())))
+					{
+						entry.setOption(ColorUtil.prependColorTag(entry.getOption(), config.highlightCallColor()));
+					}
+				}
+			}
+		}
+	}
+
 	@Subscribe
 	public void onMenuEntryAdded(MenuEntryAdded event)
 	{
@@ -1084,6 +1132,8 @@ public class BaMinigamePlugin extends Plugin
 		final MenuEntry entry = menuEntries[menuEntries.length - 1];
 		String entryOption = Text.removeTags(entry.getOption());
 		String entryTarget = Text.removeTags(entry.getTarget());
+
+		handleHighlightCall(role, entry);
 
 		final MenuHighlightMode mode = config.menuHighlightMode();
 
