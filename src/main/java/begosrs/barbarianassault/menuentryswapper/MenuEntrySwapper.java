@@ -32,6 +32,7 @@ import com.google.common.collect.Multimap;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
+import net.runelite.api.MenuAction;
 import net.runelite.api.MenuEntry;
 import net.runelite.client.util.Text;
 
@@ -172,6 +173,16 @@ public class MenuEntrySwapper
 
 		entries[index1] = entry2;
 		entries[index2] = entry1;
+
+
+		if (entry1.isItemOp() && entry1.getType() == MenuAction.CC_OP_LOW_PRIORITY)
+		{
+			entry1.setType(MenuAction.CC_OP);
+		}
+		if (entry2.isItemOp() && entry2.getType() == MenuAction.CC_OP_LOW_PRIORITY)
+		{
+			entry2.setType(MenuAction.CC_OP);
+		}
 
 		client.setMenuEntries(entries);
 
