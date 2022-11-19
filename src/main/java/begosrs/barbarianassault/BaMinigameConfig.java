@@ -253,7 +253,7 @@ public interface BaMinigameConfig extends Config
 	)
 	default InventoryHighlightMode inventoryHighlightMode()
 	{
-		return InventoryHighlightMode.DISABLED;
+		return InventoryHighlightMode.OVERLAY;
 	}
 
 	@ConfigItem(
