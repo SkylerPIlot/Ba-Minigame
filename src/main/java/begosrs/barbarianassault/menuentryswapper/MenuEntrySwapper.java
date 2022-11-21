@@ -26,9 +26,22 @@
 package begosrs.barbarianassault.menuentryswapper;
 
 import begosrs.barbarianassault.BaMinigameConfig;
+import begosrs.barbarianassault.BaMinigamePlugin;
+import begosrs.barbarianassault.Role;
+import begosrs.barbarianassault.Wave;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
+import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
@@ -36,29 +49,26 @@ import net.runelite.api.MenuAction;
 import net.runelite.api.MenuEntry;
 import net.runelite.client.util.Text;
 
-import javax.inject.Inject;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
-
 @Slf4j
 public class MenuEntrySwapper
 {
 
 	private final BaMinigameConfig config;
+	private final Client client;
+	private final BaMinigamePlugin plugin;
+
 	private final Multimap<String, Swap> swaps;
+	private final Set<Hide> hides;
 	private final ArrayListMultimap<String, Integer> optionIndexes;
-	@Inject
-	private Client client;
 
 	@Inject
-	MenuEntrySwapper(final BaMinigameConfig config)
+	MenuEntrySwapper(final BaMinigameConfig config, final Client client, BaMinigamePlugin plugin)
 	{
 		this.config = config;
+		this.client = client;
+		this.plugin = plugin;
 		this.swaps = LinkedHashMultimap.create();
+		this.hides = new HashSet<>();
 		this.optionIndexes = ArrayListMultimap.create();
 	}
 
@@ -70,17 +80,52 @@ public class MenuEntrySwapper
 
 	public void enableSwaps()
 	{
-		swap("talk-to", "get-rewards", config::swapGetRewards);
+		addSwap("talk-to", "get-rewards", config::swapGetRewards);
 
-		swap("climb-down", "quick-start", config::swapQuickStart);
+		addSwap("climb-down", "quick-start", config::swapQuickStart);
 
-		swap("look-in", "empty", config::swapCollectionBag);
-		swap("use", "tell-defensive", "collector horn", config::swapCollectorHorn);
-		swap("use", "destroy", "red egg", config::swapDestroyEggs);
-		swap("use", "destroy", "green egg", config::swapDestroyEggs);
-		swap("use", "destroy", "blue egg", config::swapDestroyEggs);
+		addSwap("look-in", "empty", config::swapCollectionBag);
+		addSwap("use", "tell-defensive", "collector horn", config::swapCollectorHorn);
+		addSwap("use", "destroy", "red egg", config::swapDestroyEggs);
+		addSwap("use", "destroy", "green egg", config::swapDestroyEggs);
+		addSwap("use", "destroy", "blue egg", config::swapDestroyEggs);
 
-		swap("drink-from", "take-from", config::swapHealerSpring);
+		addSwap("drink-from", "take-from", config::swapHealerSpring);
+
+		addHide("attack", "penance", () -> shouldHideAttOptions(Role.COLLECTOR));
+		addHide("attack", "penance", () -> shouldHideAttOptions(Role.DEFENDER));
+		addHide("attack", "penance", () -> shouldHideAttOptions(Role.HEALER));
+	}
+
+	/**
+	 * Determines whether to hide attack options for a specific role, based on config and in-game
+	 */
+	private boolean shouldHideAttOptions(Role role)
+	{
+		if (plugin.getInGameBit() != 1)
+		{
+			return false;
+		}
+		Wave wave = plugin.getWave();
+		Role currentRole = null;
+		if (wave != null)
+		{
+			currentRole = wave.getRole();
+		}
+		if (currentRole == null || !Objects.equals(currentRole, role))
+		{
+			return false;
+		}
+		switch (role)
+		{
+			case COLLECTOR:
+				return config.hideAttackOptionsCollector();
+			case DEFENDER:
+				return config.hideAttackOptionsDefender();
+			case HEALER:
+				return config.hideAttackOptionsHealer();
+		}
+		return false;
 	}
 
 	public void disableSwaps()
@@ -114,6 +159,37 @@ public class MenuEntrySwapper
 		{
 			swapMenuEntry(idx++, entry);
 		}
+
+		// Perform hiding
+		MenuEntry[] filteredEntries = filterHidden(client.getMenuEntries());
+		if (filteredEntries.length != menuEntries.length)
+		{
+			client.setMenuEntries(filteredEntries);
+		}
+	}
+
+	/**
+	 * Filters out menu entries that should be hidden.
+	 *
+	 * @return the filtered array of entries
+	 */
+	private MenuEntry[] filterHidden(MenuEntry[] menuEntries)
+	{
+		List<MenuEntry> filtered = new ArrayList<>();
+		for (MenuEntry entry : menuEntries)
+		{
+			String option = Text.standardize(entry.getOption());
+			String target = Text.standardize(entry.getTarget());
+			boolean shouldAdd = hides.stream().noneMatch(h ->
+				h.getEnabled().get() &&
+					h.getOptionPredicate().test(option) &&
+					h.getTargetPredicate().test(target));
+			if (shouldAdd)
+			{
+				filtered.add(entry);
+			}
+		}
+		return filtered.toArray(new MenuEntry[0]);
 	}
 
 	private void swapMenuEntry(int index, MenuEntry menuEntry)
@@ -127,7 +203,7 @@ public class MenuEntrySwapper
 		{
 			if (swap.getTargetPredicate().test(target) && swap.getEnabled().get())
 			{
-				if (swap(swap.getSwappedOption(), target, index, swap.isStrict()))
+				if (performSwap(swap.getSwappedOption(), target, index, swap.isStrict()))
 				{
 					break;
 				}
@@ -135,22 +211,27 @@ public class MenuEntrySwapper
 		}
 	}
 
-	private void swap(String option, String swappedOption, Supplier<Boolean> enabled)
+	private void addSwap(String option, String swappedOption, Supplier<Boolean> enabled)
 	{
-		swap(option, s -> true, swappedOption, enabled);
+		addSwap(option, s -> true, swappedOption, enabled);
 	}
 
-	private void swap(String option, String swappedOption, String target, Supplier<Boolean> enabled)
+	private void addSwap(String option, String swappedOption, String target, Supplier<Boolean> enabled)
 	{
-		swap(option, s -> Objects.equals(s, target), swappedOption, enabled);
+		addSwap(option, s -> Objects.equals(s, target), swappedOption, enabled);
 	}
 
-	private void swap(String option, Predicate<String> targetPredicate, String swappedOption, Supplier<Boolean> enabled)
+	private void addSwap(String option, Predicate<String> targetPredicate, String swappedOption, Supplier<Boolean> enabled)
 	{
 		swaps.put(option, new Swap(s -> true, targetPredicate, swappedOption, enabled, true));
 	}
 
-	private boolean swap(String option, String target, int index, boolean strict)
+	private void addHide(String option, String targetContains, Supplier<Boolean> enabled)
+	{
+		hides.add(new Hide(s -> Objects.equals(s, option), s -> s.contains(targetContains), enabled, true));
+	}
+
+	private boolean performSwap(String option, String target, int index, boolean strict)
 	{
 		MenuEntry[] menuEntries = client.getMenuEntries();
 
@@ -159,21 +240,20 @@ public class MenuEntrySwapper
 
 		if (optionIdx >= 0)
 		{
-			swap(optionIndexes, menuEntries, optionIdx, index);
+			performSwap(optionIndexes, menuEntries, optionIdx, index);
 			return true;
 		}
 
 		return false;
 	}
 
-	private void swap(ArrayListMultimap<String, Integer> optionIndexes, MenuEntry[] entries, int index1, int index2)
+	private void performSwap(ArrayListMultimap<String, Integer> optionIndexes, MenuEntry[] entries, int index1, int index2)
 	{
 		MenuEntry entry1 = entries[index1],
-				  entry2 = entries[index2];
+			entry2 = entries[index2];
 
 		entries[index1] = entry2;
 		entries[index2] = entry1;
-
 
 		if (entry1.isItemOp() && entry1.getType() == MenuAction.CC_OP_LOW_PRIORITY)
 		{
@@ -188,10 +268,10 @@ public class MenuEntrySwapper
 
 		// Update optionIndexes
 		String option1 = Text.removeTags(entry1.getOption()).toLowerCase(),
-				  option2 = Text.removeTags(entry2.getOption()).toLowerCase();
+			option2 = Text.removeTags(entry2.getOption()).toLowerCase();
 
 		List<Integer> list1 = optionIndexes.get(option1),
-				  list2 = optionIndexes.get(option2);
+			list2 = optionIndexes.get(option2);
 
 		// call remove(Object) instead of remove(int)
 		list1.remove((Integer) index1);

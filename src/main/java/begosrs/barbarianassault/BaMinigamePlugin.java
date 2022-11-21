@@ -144,9 +144,9 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @PluginDescriptor(
-		  name = "Ba Minigame",
-		  description = "Includes many features to enhance the barbarian assault minigame gameplay experience",
-		  tags = {"overlay", "b.a.", "barbarian assault", "minigame", "attacker", "defender", "collector", "healer", "plugin hub"}
+	name = "Ba Minigame",
+	description = "Includes many features to enhance the barbarian assault minigame gameplay experience",
+	tags = {"overlay", "b.a.", "barbarian assault", "minigame", "attacker", "defender", "collector", "healer", "plugin hub"}
 )
 public class BaMinigamePlugin extends Plugin
 {
@@ -166,21 +166,21 @@ public class BaMinigamePlugin extends Plugin
 	private static final String GROUND_ITEMS_CONFIG_HIGHLIGHTED_ITENS = "highlightedItems";
 	private static final String GROUND_ITEMS_CONFIG_HIDDEN_ITENS = "hiddenItems";
 	private static final String[] GROUND_ITEMS_HIDDEN_LIST = {
-			  "Green egg", "Red egg", "Blue egg", "Hammer", "Logs", "Yellow egg", "Crackers", "Tofu", "Worms"
+		"Green egg", "Red egg", "Blue egg", "Hammer", "Logs", "Yellow egg", "Crackers", "Tofu", "Worms"
 	};
 	private static final String BARBARIAN_ASSAULT_CONFIG_GROUP = "barbarianAssault";
 	private static final String[] BARBARIAN_ASSAULT_CONFIGS = {
-			  "showTimer", "showHealerBars", "waveTimes"
+		"showTimer", "showHealerBars", "waveTimes"
 	};
 	private static final int BA_UNDERGROUND_REGION_ID = 10322,
-			  BA_TILE_START_X = 2522,
-			  BA_TILE_END_X = 2538,
-			  BA_TILE_START_Y = 3560,
-			  BA_TILE_END_Y = 3579;
+		BA_TILE_START_X = 2522,
+		BA_TILE_END_X = 2538,
+		BA_TILE_START_Y = 3560,
+		BA_TILE_END_Y = 3579;
 	private static final int WAVE_ICON_WIDTH = 17;
 	private static final BaWidgetInfo[] TEAM_PLAYERS_ROLES_WIDGETS = {
-			  BaWidgetInfo.BA_TEAM_PLAYER1_ROLE, BaWidgetInfo.BA_TEAM_PLAYER2_ROLE, BaWidgetInfo.BA_TEAM_PLAYER3_ROLE,
-			  BaWidgetInfo.BA_TEAM_PLAYER4_ROLE, BaWidgetInfo.BA_TEAM_PLAYER5_ROLE
+		BaWidgetInfo.BA_TEAM_PLAYER1_ROLE, BaWidgetInfo.BA_TEAM_PLAYER2_ROLE, BaWidgetInfo.BA_TEAM_PLAYER3_ROLE,
+		BaWidgetInfo.BA_TEAM_PLAYER4_ROLE, BaWidgetInfo.BA_TEAM_PLAYER5_ROLE
 	};
 	@Getter
 	private final List<GameObject> hoppers = new ArrayList<>(2);
@@ -646,18 +646,18 @@ public class BaMinigamePlugin extends Plugin
 		{
 			final Item[] inventory = event.getItemContainer().getItems();
 			boolean containsRoleHorn = Arrays.stream(inventory).map(Item::getId).anyMatch(id ->
-					  id == ItemID.ATTACKER_HORN
-								 || id == ItemID.ATTACKER_HORN_10517
-								 || id == ItemID.ATTACKER_HORN_10518
-								 || id == ItemID.ATTACKER_HORN_10519
-								 || id == ItemID.ATTACKER_HORN_10520
-								 || id == ItemID.DEFENDER_HORN
-								 || id == ItemID.COLLECTOR_HORN
-								 || id == ItemID.HEALER_HORN
-								 || id == ItemID.HEALER_HORN_10527
-								 || id == ItemID.HEALER_HORN_10528
-								 || id == ItemID.HEALER_HORN_10529
-								 || id == ItemID.HEALER_HORN_10530
+				id == ItemID.ATTACKER_HORN
+					|| id == ItemID.ATTACKER_HORN_10517
+					|| id == ItemID.ATTACKER_HORN_10518
+					|| id == ItemID.ATTACKER_HORN_10519
+					|| id == ItemID.ATTACKER_HORN_10520
+					|| id == ItemID.DEFENDER_HORN
+					|| id == ItemID.COLLECTOR_HORN
+					|| id == ItemID.HEALER_HORN
+					|| id == ItemID.HEALER_HORN_10527
+					|| id == ItemID.HEALER_HORN_10528
+					|| id == ItemID.HEALER_HORN_10529
+					|| id == ItemID.HEALER_HORN_10530
 			);
 			if (containsRoleHorn && !this.containsRoleHorn)
 			{
@@ -738,8 +738,8 @@ public class BaMinigamePlugin extends Plugin
 				if (config.deathMessageColor() != null)
 				{
 					if (role == Role.ATTACKER && (npc.equals("Fighters") || npc.equals("Rangers"))
-							  || role == Role.HEALER && npc.equals("Healers")
-							  || role == Role.DEFENDER && npc.equals("Runners"))
+						|| role == Role.HEALER && npc.equals("Healers")
+						|| role == Role.DEFENDER && npc.equals("Runners"))
 					{
 						nodeValue = ColorUtil.wrapWithColorTag(nodeValue, config.deathMessageColor());
 						node.setValue(nodeValue);
@@ -785,7 +785,7 @@ public class BaMinigamePlugin extends Plugin
 				// 0 whereas when in a real wave it changes while still in the instance.
 				final DurationMode durationMode = config.showDurationMode();
 				if ((durationMode == DurationMode.WAVE || durationMode == DurationMode.WAVE_ROUND)
-						  && wave != null && client.isInInstancedRegion())
+					&& wave != null && client.isInInstancedRegion())
 				{
 					announceWaveTime();
 				}
@@ -847,8 +847,8 @@ public class BaMinigamePlugin extends Plugin
 	private boolean includeKandarinBonus()
 	{
 		return config.kandarinHardDiaryPointsBonus() == KandarinDiaryBonusMode.YES
-				  || config.kandarinHardDiaryPointsBonus() == KandarinDiaryBonusMode.IF_COMPLETED &&
-				  client.getVar(Varbits.DIARY_KANDARIN_HARD) == 1;
+			|| config.kandarinHardDiaryPointsBonus() == KandarinDiaryBonusMode.IF_COMPLETED &&
+			client.getVar(Varbits.DIARY_KANDARIN_HARD) == 1;
 	}
 
 	@Subscribe
@@ -865,7 +865,7 @@ public class BaMinigamePlugin extends Plugin
 	{
 		final DisplayPointsLocationMode pointsLocationMode = config.displayPointsLocationMode();
 		if (pointsLocationMode == DisplayPointsLocationMode.OUTPOST ||
-				  pointsLocationMode == DisplayPointsLocationMode.OUTPOST_INGAME)
+			pointsLocationMode == DisplayPointsLocationMode.OUTPOST_INGAME)
 		{
 			final Player player = client.getLocalPlayer();
 			if (player != null)
@@ -931,7 +931,7 @@ public class BaMinigamePlugin extends Plugin
 		}
 
 		if (session != null
-				  && System.currentTimeMillis() >= lastWaveCompletedTimestamp + TimeUnit.MINUTES.toMillis(config.sessionResetTime()))
+			&& System.currentTimeMillis() >= lastWaveCompletedTimestamp + TimeUnit.MINUTES.toMillis(config.sessionResetTime()))
 		{
 			session.reset();
 			updateRolePoints(false);
@@ -1057,7 +1057,7 @@ public class BaMinigamePlugin extends Plugin
 
 			final BaWidgetInfo attackStyleTextBaWidgetInfo = attackStyleWidget.getTextWidget();
 			final Widget attackStyleTextWidget = client.getWidget(attackStyleTextBaWidgetInfo.getGroupId(),
-					  attackStyleTextBaWidgetInfo.getChildId());
+				attackStyleTextBaWidgetInfo.getChildId());
 			if (attackStyleTextWidget != null)
 			{
 				if (attackStyleTextColor == null)
@@ -1088,10 +1088,10 @@ public class BaMinigamePlugin extends Plugin
 		final MenuHighlightMode mode = config.menuHighlightMode();
 
 		if (mode != MenuHighlightMode.DISABLED
-				  && role == Role.COLLECTOR
-				  && entryOption.equals("Take")
-				  && event.getType() == MENU_THIRD_OPTION
-				  && listen.startsWith(entryTarget))
+			&& role == Role.COLLECTOR
+			&& entryOption.equals("Take")
+			&& event.getType() == MENU_THIRD_OPTION
+			&& listen.startsWith(entryTarget))
 		{
 			Color color = getEggColorFromName(entryTarget.split(" ")[0]);
 			if (color != null)
@@ -1184,7 +1184,7 @@ public class BaMinigamePlugin extends Plugin
 			final BaWidgetInfo attackStyleTextBaWidgetInfo = attackStyleWidget.getTextWidget();
 
 			final Widget attackStyleTextWidget = client.getWidget(attackStyleTextBaWidgetInfo.getGroupId(),
-					  attackStyleTextBaWidgetInfo.getChildId());
+				attackStyleTextBaWidgetInfo.getChildId());
 			if (attackStyleTextWidget != null)
 			{
 				attackStyleTextWidget.setTextColor(color);
@@ -1317,8 +1317,8 @@ public class BaMinigamePlugin extends Plugin
 		}
 
 		log.debug("Starting wave {} with roles 1={} 2={} 3={} 4={} 5={} at {}", currentWave, playerRoles[0],
-				  playerRoles[1], playerRoles[2], playerRoles[3], playerRoles[4],
-				  timer.getRoundTimeFormatted(false, config.timeUnits()));
+			playerRoles[1], playerRoles[2], playerRoles[3], playerRoles[4],
+			timer.getRoundTimeFormatted(false, config.timeUnits()));
 
 		timer.setWaveStartTime();
 		wave = new Wave(client, currentWave, playerRoles, timer);
@@ -1364,7 +1364,7 @@ public class BaMinigamePlugin extends Plugin
 		waveInfoWidget.revalidate();
 
 		boolean showingCounter = role == Role.HEALER && config.showHpCountOverlay()
-				  || role == Role.COLLECTOR && config.showEggCountOverlay();
+			|| role == Role.COLLECTOR && config.showEggCountOverlay();
 		if (showingCounter)
 		{
 			Widget roleCounter = waveInfoWidget.createChild(0, WidgetType.TEXT);
@@ -1379,7 +1379,7 @@ public class BaMinigamePlugin extends Plugin
 			roleCounter.setXPositionMode(WidgetPositionMode.ABSOLUTE_RIGHT);
 			roleCounter.setYPositionMode(WidgetPositionMode.ABSOLUTE_LEFT);
 			roleCounter.setClickMask(WidgetConfig.USE_GROUND_ITEM | WidgetConfig.USE_ITEM | WidgetConfig.USE_NPC
-					  | WidgetConfig.USE_OBJECT | WidgetConfig.USE_WIDGET);
+				| WidgetConfig.USE_OBJECT | WidgetConfig.USE_WIDGET);
 			roleCounter.setNoClickThrough(false);
 			roleCounter.revalidate();
 
@@ -1406,7 +1406,7 @@ public class BaMinigamePlugin extends Plugin
 			roleCounterIcon.setOriginalX(380);
 			roleCounterIcon.setOriginalY(config.hideTeammateRole() ? 64 : 87);
 			roleCounterIcon.setClickMask(WidgetConfig.USE_GROUND_ITEM | WidgetConfig.USE_ITEM | WidgetConfig.USE_NPC
-					  | WidgetConfig.USE_OBJECT | WidgetConfig.USE_WIDGET);
+				| WidgetConfig.USE_OBJECT | WidgetConfig.USE_WIDGET);
 			roleCounterIcon.setNoClickThrough(false);
 			roleCounterIcon.revalidate();
 		}
@@ -1416,17 +1416,17 @@ public class BaMinigamePlugin extends Plugin
 			if (showingCounter)
 			{
 				setCallTimerWidget(waveInfoWidget, waveTextWidget, config.hideTeammateRole() ? 80 : 100,
-						  config.hideTeammateRole() ? 89 : 109);
+					config.hideTeammateRole() ? 89 : 109);
 			}
 			else if (role == Role.ATTACKER)
 			{
 				setCallTimerWidget(waveInfoWidget, waveTextWidget, config.hideTeammateRole() ? 67 : 87,
-						  config.hideTeammateRole() ? 76 : 96);
+					config.hideTeammateRole() ? 76 : 96);
 			}
 			else
 			{
 				setCallTimerWidget(waveInfoWidget, waveTextWidget, config.hideTeammateRole() ? 58 : 78,
-						  config.hideTeammateRole() ? 67 : 87);
+					config.hideTeammateRole() ? 67 : 87);
 			}
 		}
 
@@ -1457,7 +1457,7 @@ public class BaMinigamePlugin extends Plugin
 		callTimer.setYPositionMode(WidgetPositionMode.ABSOLUTE_LEFT);
 		callTimer.setText("- - -");
 		callTimer.setClickMask(WidgetConfig.USE_GROUND_ITEM | WidgetConfig.USE_ITEM | WidgetConfig.USE_NPC
-				  | WidgetConfig.USE_OBJECT | WidgetConfig.USE_WIDGET);
+			| WidgetConfig.USE_OBJECT | WidgetConfig.USE_WIDGET);
 		callTimer.setNoClickThrough(false);
 		callTimer.revalidate();
 
@@ -1468,7 +1468,7 @@ public class BaMinigamePlugin extends Plugin
 		callTimerIcon.setOriginalHeight(13);
 		callTimerIcon.setOriginalWidth(17);
 		callTimerIcon.setClickMask(WidgetConfig.USE_GROUND_ITEM | WidgetConfig.USE_ITEM | WidgetConfig.USE_NPC
-				  | WidgetConfig.USE_OBJECT | WidgetConfig.USE_WIDGET);
+			| WidgetConfig.USE_OBJECT | WidgetConfig.USE_WIDGET);
 		callTimerIcon.setNoClickThrough(false);
 		callTimerIcon.revalidate();
 	}
@@ -1672,8 +1672,8 @@ public class BaMinigamePlugin extends Plugin
 	private void announceTime(String preText, String time)
 	{
 		ChatMessageBuilder chatMessageBuilder = new ChatMessageBuilder()
-				  .append(ChatColorType.NORMAL)
-				  .append(preText);
+			.append(ChatColorType.NORMAL)
+			.append(preText);
 		if (config.enableGameChatColors())
 		{
 			chatMessageBuilder.append(ChatColorType.HIGHLIGHT);
@@ -1686,9 +1686,9 @@ public class BaMinigamePlugin extends Plugin
 	private void announce(final ChatMessageBuilder chatMessage)
 	{
 		chatMessageManager.queue(QueuedMessage.builder()
-				  .type(ChatMessageType.CONSOLE)
-				  .runeLiteFormattedMessage(chatMessage.build())
-				  .build());
+			.type(ChatMessageType.CONSOLE)
+			.runeLiteFormattedMessage(chatMessage.build())
+			.build());
 	}
 
 	private Color getEggColorFromName(String eggName)
@@ -1809,14 +1809,14 @@ public class BaMinigamePlugin extends Plugin
 		final int realItemId = itemComposition.getNote() != -1 ? itemComposition.getLinkedNoteId() : itemId;
 
 		return GroundItem.builder()
-				  .id(itemId)
-				  .location(tile.getWorldLocation())
-				  .itemId(realItemId)
-				  .quantity(item.getQuantity())
-				  .name(itemComposition.getName())
-				  .height(tile.getItemLayer().getHeight())
-				  .spawnTime(Instant.now())
-				  .build();
+			.id(itemId)
+			.location(tile.getWorldLocation())
+			.itemId(realItemId)
+			.quantity(item.getQuantity())
+			.name(itemComposition.getName())
+			.height(tile.getItemLayer().getHeight())
+			.spawnTime(Instant.now())
+			.build();
 	}
 
 	private void removeEggSpawn(TileItem item, Tile tile)
@@ -1837,9 +1837,9 @@ public class BaMinigamePlugin extends Plugin
 		Instant spawnTime = groundItem.getSpawnTime();
 		Instant now = Instant.now();
 		if (wave != null
-				  && wave.getNumber() != 10
-				  && (spawnTime == null || now.isBefore(spawnTime.plus(Duration.ofMinutes(2))))
-				  && groundItem.getLocation().equals(player.getWorldLocation()))
+			&& wave.getNumber() != 10
+			&& (spawnTime == null || now.isBefore(spawnTime.plus(Duration.ofMinutes(2))))
+			&& groundItem.getLocation().equals(player.getWorldLocation()))
 		{
 			wave.setEggsCount(wave.getEggsCount() + 1);
 		}
@@ -1885,30 +1885,30 @@ public class BaMinigamePlugin extends Plugin
 	private boolean isEggItem(int itemId)
 	{
 		return itemId == ItemID.RED_EGG
-				  || itemId == ItemID.GREEN_EGG
-				  || itemId == ItemID.BLUE_EGG
-				  || itemId == ItemID.YELLOW_EGG;
+			|| itemId == ItemID.GREEN_EGG
+			|| itemId == ItemID.BLUE_EGG
+			|| itemId == ItemID.YELLOW_EGG;
 	}
 
 	private boolean isBaitItem(int itemId)
 	{
 		return itemId == ItemID.TOFU
-				  || itemId == ItemID.WORMS
-				  || itemId == ItemID.CRACKERS;
+			|| itemId == ItemID.WORMS
+			|| itemId == ItemID.CRACKERS;
 	}
 
 	private boolean isLogsOrHammerItem(int itemId)
 	{
 		return itemId == ItemID.LOGS
-				  || itemId == ItemID.HAMMER;
+			|| itemId == ItemID.HAMMER;
 	}
 
 	private boolean isHopperGameObject(int gameObjectId)
 	{
 		return gameObjectId == ObjectID.EGG_HOPPER
-				  || gameObjectId == ObjectID.EGG_HOPPER_20265
-				  || gameObjectId == ObjectID.EGG_HOPPER_20266
-				  || gameObjectId == BaObjectID.EGG_HOPPER_20267;
+			|| gameObjectId == ObjectID.EGG_HOPPER_20265
+			|| gameObjectId == ObjectID.EGG_HOPPER_20266
+			|| gameObjectId == BaObjectID.EGG_HOPPER_20267;
 	}
 
 	private void enableRunnerTickTimer(boolean display)
@@ -1998,10 +1998,10 @@ public class BaMinigamePlugin extends Plugin
 		final DisplayPointsMode displayPointsMode = config.displayPointsMode();
 		final RolePointsTrackingMode rolePointsTrackingMode = config.rolePointsTrackingMode();
 		if (displayPointsMode != DisplayPointsMode.INFO_BOX
-				  || rolePointsTrackingMode == RolePointsTrackingMode.ATTACKER && role != Role.ATTACKER
-				  || rolePointsTrackingMode == RolePointsTrackingMode.DEFENDER && role != Role.DEFENDER
-				  || rolePointsTrackingMode == RolePointsTrackingMode.HEALER && role != Role.HEALER
-				  || rolePointsTrackingMode == RolePointsTrackingMode.COLLECTOR && role != Role.COLLECTOR)
+			|| rolePointsTrackingMode == RolePointsTrackingMode.ATTACKER && role != Role.ATTACKER
+			|| rolePointsTrackingMode == RolePointsTrackingMode.DEFENDER && role != Role.DEFENDER
+			|| rolePointsTrackingMode == RolePointsTrackingMode.HEALER && role != Role.HEALER
+			|| rolePointsTrackingMode == RolePointsTrackingMode.COLLECTOR && role != Role.COLLECTOR)
 		{
 			hideRolePointsInfoBox(role);
 		}
@@ -2040,16 +2040,16 @@ public class BaMinigamePlugin extends Plugin
 	private void setGroundItemsPluginLists()
 	{
 		String highlightedItems = Optional
-				  .ofNullable(configManager.getConfiguration(GROUND_ITEMS_CONFIG_GROUP, GROUND_ITEMS_CONFIG_HIGHLIGHTED_ITENS))
-				  .orElse("");
+			.ofNullable(configManager.getConfiguration(GROUND_ITEMS_CONFIG_GROUP, GROUND_ITEMS_CONFIG_HIGHLIGHTED_ITENS))
+			.orElse("");
 		final List<String> highlightedItemsList = Arrays.stream(highlightedItems.split(","))
-				  .map(i -> i.trim().toLowerCase()).collect(Collectors.toList());
+			.map(i -> i.trim().toLowerCase()).collect(Collectors.toList());
 
 		final String hiddenItems = Optional
-				  .ofNullable(configManager.getConfiguration(GROUND_ITEMS_CONFIG_GROUP, GROUND_ITEMS_CONFIG_HIDDEN_ITENS))
-				  .orElse("");
+			.ofNullable(configManager.getConfiguration(GROUND_ITEMS_CONFIG_GROUP, GROUND_ITEMS_CONFIG_HIDDEN_ITENS))
+			.orElse("");
 		final List<String> hiddenItemsList = Arrays.stream(hiddenItems.split(","))
-				  .map(i -> i.trim().toLowerCase()).collect(Collectors.toList());
+			.map(i -> i.trim().toLowerCase()).collect(Collectors.toList());
 
 		final StringBuilder highlightedItemsListBuilder = new StringBuilder();
 		final StringBuilder hiddenItemsListBuilder = new StringBuilder();
@@ -2105,12 +2105,12 @@ public class BaMinigamePlugin extends Plugin
 	private void restoreGroundItemsPluginLists()
 	{
 		String highlightedItems = Optional
-				  .ofNullable(configManager.getConfiguration(GROUND_ITEMS_CONFIG_GROUP, GROUND_ITEMS_CONFIG_HIGHLIGHTED_ITENS))
-				  .orElse("");
+			.ofNullable(configManager.getConfiguration(GROUND_ITEMS_CONFIG_GROUP, GROUND_ITEMS_CONFIG_HIGHLIGHTED_ITENS))
+			.orElse("");
 		StringBuilder highlightedItemsBuilder = new StringBuilder(highlightedItems);
 		String[] highlightedItemsArray = config.getGroundItemsPluginHighlightedList().split(",");
 		final List<String> highlightedItemsList = Arrays.stream(highlightedItems.split(","))
-				  .map(i -> i.trim().toLowerCase()).collect(Collectors.toList());
+			.map(i -> i.trim().toLowerCase()).collect(Collectors.toList());
 
 		for (String s : highlightedItemsArray)
 		{
@@ -2197,7 +2197,7 @@ public class BaMinigamePlugin extends Plugin
 	private void setHealerTeammatesHealthDisplay()
 	{
 		Widget teammatesHealth = client.getWidget(BaWidgetInfo.BA_HEAL_TEAMMATES.getGroupId(),
-				  BaWidgetInfo.BA_HEAL_TEAMMATES.getChildId());
+			BaWidgetInfo.BA_HEAL_TEAMMATES.getChildId());
 		if (teammatesHealth == null)
 		{
 			return;
@@ -2215,7 +2215,7 @@ public class BaMinigamePlugin extends Plugin
 	private void restoreHealerTeammatesHealth()
 	{
 		Widget teammatesHealth = client.getWidget(BaWidgetInfo.BA_HEAL_TEAMMATES.getGroupId(),
-				  BaWidgetInfo.BA_HEAL_TEAMMATES.getChildId());
+			BaWidgetInfo.BA_HEAL_TEAMMATES.getChildId());
 		if (teammatesHealth != null)
 		{
 			teammatesHealth.setHidden(false);
@@ -2243,7 +2243,7 @@ public class BaMinigamePlugin extends Plugin
 			return false;
 		}
 		if (locationMode == DisplayPointsLocationMode.OUTPOST ||
-				  locationMode == DisplayPointsLocationMode.OUTPOST_INGAME)
+			locationMode == DisplayPointsLocationMode.OUTPOST_INGAME)
 		{
 			if (locationMode == DisplayPointsLocationMode.OUTPOST_INGAME && inGameBit == 1)
 			{
@@ -2257,7 +2257,7 @@ public class BaMinigamePlugin extends Plugin
 			final int x = this.worldPoint.getX();
 			final int y = this.worldPoint.getY();
 			return regionId == BA_UNDERGROUND_REGION_ID
-					  || x >= BA_TILE_START_X && x <= BA_TILE_END_X && y >= BA_TILE_START_Y && y <= BA_TILE_END_Y;
+				|| x >= BA_TILE_START_X && x <= BA_TILE_END_X && y >= BA_TILE_START_Y && y <= BA_TILE_END_Y;
 		}
 		return false;
 	}
