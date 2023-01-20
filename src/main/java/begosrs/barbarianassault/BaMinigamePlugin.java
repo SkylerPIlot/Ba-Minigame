@@ -595,7 +595,7 @@ public class BaMinigamePlugin extends Plugin
 				}
 				else if (round != null)
 				{
-					onRoundEnded();
+					//onRoundEnded();
 				}
 				break;
 			}
@@ -709,6 +709,7 @@ public class BaMinigamePlugin extends Plugin
 				final MessageNode messageNode = chatMessage.getMessageNode();
 				final String nodeValue = Text.removeTags(messageNode.getValue());
 				messageNode.setValue(ColorUtil.wrapWithColorTag(nodeValue, config.highlightNotificationColor()));
+				chatMessageManager.update(messageNode);
 			}
 			else if (wave != null && message.startsWith("All of the Penance "))
 			{
@@ -771,7 +772,7 @@ public class BaMinigamePlugin extends Plugin
 	@Subscribe
 	public void onVarbitChanged(VarbitChanged event)
 	{
-		final int currentInGame = client.getVarbitValue(Varbits.IN_GAME_BA);
+		final int currentInGame = client.getVar(Varbits.IN_GAME_BA);
 
 		if (inGameBit != currentInGame)
 		{
@@ -787,6 +788,10 @@ public class BaMinigamePlugin extends Plugin
 					&& wave != null && client.isInInstancedRegion())
 				{
 					announceWaveTime();
+					if(currentWave == 10)
+					{
+						onRoundEnded();
+					}
 				}
 
 				stopWave();
@@ -847,7 +852,7 @@ public class BaMinigamePlugin extends Plugin
 	{
 		return config.kandarinHardDiaryPointsBonus() == KandarinDiaryBonusMode.YES
 			|| config.kandarinHardDiaryPointsBonus() == KandarinDiaryBonusMode.IF_COMPLETED &&
-			client.getVarbitValue(Varbits.DIARY_KANDARIN_HARD) == 1;
+			client.getVar(Varbits.DIARY_KANDARIN_HARD) == 1;
 	}
 
 	@Subscribe
@@ -1040,7 +1045,7 @@ public class BaMinigamePlugin extends Plugin
 			return;
 		}
 
-		final int var = client.getVarbitValue(Varbits.EQUIPPED_WEAPON_TYPE);
+		final int var = client.getVar(Varbits.EQUIPPED_WEAPON_TYPE);
 		final AttackStyle[] styles = WeaponType.getWeaponType(var).getAttackStyles();
 		for (int i = 0; i < styles.length; i++)
 		{
@@ -1168,7 +1173,7 @@ public class BaMinigamePlugin extends Plugin
 
 		final int color = attackStyleTextColor != null ? attackStyleTextColor : DEFAULT_ATTACK_STYLE_COLOR;
 
-		final int var = client.getVarbitValue(Varbits.EQUIPPED_WEAPON_TYPE);
+		final int var = client.getVar(Varbits.EQUIPPED_WEAPON_TYPE);
 		final AttackStyle[] styles = WeaponType.getWeaponType(var).getAttackStyles();
 		for (int i = 0; i < styles.length; i++)
 		{
