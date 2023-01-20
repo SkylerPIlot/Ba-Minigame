@@ -56,7 +56,7 @@ public class Test {
 		final Timer timer = new Timer();
 
 		final Round round = new Round(1, timer);
-		assertTrue(round.getTimer().getRoundTime(false).toMillis() <= 1000);
+		assertTrue(round.getTimer().getRoundTime().toMillis() <= 1000);
 
 		// 1st wave starts
 		Wave wave = new Wave(null, 1, new Role[5], timer);

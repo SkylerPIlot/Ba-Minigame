@@ -58,6 +58,23 @@ import begosrs.barbarianassault.timer.TimeUnits;
 import begosrs.barbarianassault.timer.Timer;
 import begosrs.barbarianassault.waveinfo.WaveInfoOverlay;
 import com.google.inject.Provides;
+import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import javax.inject.Inject;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -123,24 +140,6 @@ import net.runelite.client.util.ColorUtil;
 import net.runelite.client.util.ImageUtil;
 import net.runelite.client.util.Text;
 import org.apache.commons.lang3.StringUtils;
-
-import javax.inject.Inject;
-import java.awt.Color;
-import java.awt.image.BufferedImage;
-import java.time.Duration;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 @Slf4j
 @PluginDescriptor(
@@ -595,7 +594,7 @@ public class BaMinigamePlugin extends Plugin
 				}
 				else if (round != null)
 				{
-					onRoundEnded();
+					announceRoundInfo();
 				}
 				break;
 			}
@@ -787,6 +786,10 @@ public class BaMinigamePlugin extends Plugin
 					&& wave != null && client.isInInstancedRegion())
 				{
 					announceWaveTime();
+					if (currentWave == 10)
+					{
+						onRoundEnded();
+					}
 				}
 
 				stopWave();
@@ -1258,33 +1261,10 @@ public class BaMinigamePlugin extends Plugin
 		}
 
 		onWaveEnded(true);
-
-		final DurationMode durationMode = config.showDurationMode();
-		if (durationMode == DurationMode.ROUND || durationMode == DurationMode.WAVE_ROUND)
+		if (timer != null)
 		{
-			announceRoundTime();
+			timer.setRoundEnded();
 		}
-
-		if (round.isComplete())
-		{
-			final boolean colorful = config.enableGameChatColors();
-
-			final PointsMode pointsMode = config.showRewardPointsMode();
-			if (pointsMode == PointsMode.ROUND || pointsMode == PointsMode.WAVE_ROUND)
-			{
-				ChatMessageBuilder roundPoints = round.getRoundPointsMessage(colorful, includeKandarinBonus());
-				announce(roundPoints);
-			}
-
-			final RewardsBreakdownMode rewardsBreakdownMode = config.showRewardsBreakdownMode();
-			if (rewardsBreakdownMode == RewardsBreakdownMode.ROUND || rewardsBreakdownMode == RewardsBreakdownMode.WAVE_ROUND)
-			{
-				ChatMessageBuilder roundSummary = round.getRoundSummaryMessage(colorful);
-				announce(roundSummary);
-			}
-		}
-
-		timer = null;
 	}
 
 	// wave starts when ba ingamebit == 1 (without role set) or when ba widgets are loaded (with role set)
@@ -1317,7 +1297,7 @@ public class BaMinigamePlugin extends Plugin
 
 		log.debug("Starting wave {} with roles 1={} 2={} 3={} 4={} 5={} at {}", currentWave, playerRoles[0],
 			playerRoles[1], playerRoles[2], playerRoles[3], playerRoles[4],
-			timer.getRoundTimeFormatted(false, config.timeUnits()));
+			timer.getRoundTimeFormatted(config.timeUnits()));
 
 		timer.setWaveStartTime();
 		wave = new Wave(client, currentWave, playerRoles, timer);
@@ -1646,6 +1626,42 @@ public class BaMinigamePlugin extends Plugin
 		announceTime(message.toString(), time);
 	}
 
+
+	private void announceRoundInfo()
+	{
+		if (round == null)
+		{
+			return;
+		}
+
+		final DurationMode durationMode = config.showDurationMode();
+		if (durationMode == DurationMode.ROUND || durationMode == DurationMode.WAVE_ROUND)
+		{
+			announceRoundTime();
+		}
+
+		if (round.isComplete())
+		{
+			final boolean colorful = config.enableGameChatColors();
+
+			final PointsMode pointsMode = config.showRewardPointsMode();
+			if (pointsMode == PointsMode.ROUND || pointsMode == PointsMode.WAVE_ROUND)
+			{
+				ChatMessageBuilder roundPoints = round.getRoundPointsMessage(colorful, includeKandarinBonus());
+				announce(roundPoints);
+			}
+
+			final RewardsBreakdownMode rewardsBreakdownMode = config.showRewardsBreakdownMode();
+			if (rewardsBreakdownMode == RewardsBreakdownMode.ROUND || rewardsBreakdownMode == RewardsBreakdownMode.WAVE_ROUND)
+			{
+				ChatMessageBuilder roundSummary = round.getRoundSummaryMessage(colorful);
+				announce(roundSummary);
+			}
+		}
+
+		timer = null;
+	}
+
 	private void announceRoundTime()
 	{
 		if (round == null || round.getTimer() == null)
@@ -1653,7 +1669,7 @@ public class BaMinigamePlugin extends Plugin
 			return;
 		}
 
-		final String time = round.getTimer().getRoundTimeFormatted(true, config.timeUnits());
+		final String time = round.getTimer().getRoundTimeFormatted(config.timeUnits());
 		final int fromWave = round.getStartingWave();
 		final StringBuilder message = new StringBuilder();
 		if (fromWave == 1)
@@ -1666,7 +1682,6 @@ public class BaMinigamePlugin extends Plugin
 		}
 		announceTime(message.toString(), time);
 	}
-
 
 	private void announceTime(String preText, String time)
 	{
