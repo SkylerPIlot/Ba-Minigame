@@ -2296,6 +2296,16 @@ public class BaMinigamePlugin extends Plugin
 			{
 				return;
 			}
+			
+			if (lastListen.equalsIgnoreCase("Poison Worms") && currentListen.equalsIgnoreCase("Pois. Worms")
+				|| lastListen.equalsIgnoreCase("Pois. Worms") && currentListen.equalsIgnoreCase("Poison Worms")
+				|| lastListen.equalsIgnoreCase("Poison Tofu") && currentListen.equalsIgnoreCase("Pois. Tofu")
+				|| lastListen.equalsIgnoreCase("Pois. Tofu") && currentListen.equalsIgnoreCase("Poison Tofu")
+				|| lastListen.equalsIgnoreCase("Poison Meat") && currentListen.equalsIgnoreCase("Pois. Meat")
+				|| lastListen.equalsIgnoreCase("Pois. Meat") && currentListen.equalsIgnoreCase("Poison Meat")) {
+				// Ignore differences from players calls vs Horn of Glory calls
+				return;
+			}
 
 			ChatMessageBuilder message = new ChatMessageBuilder().append("Call correction: ");
 			if (config.enableGameChatColors())
