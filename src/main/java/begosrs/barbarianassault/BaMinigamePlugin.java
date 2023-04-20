@@ -713,7 +713,7 @@ public class BaMinigamePlugin extends Plugin
 			{
 				final MessageNode node = chatMessage.getMessageNode();
 				String nodeValue = Text.removeTags(node.getValue());
-				final String npc = message.split(" ")[4];
+				final String npc = nodeValue.split(" ")[4];
 
 				Role role = wave.getRole();
 
