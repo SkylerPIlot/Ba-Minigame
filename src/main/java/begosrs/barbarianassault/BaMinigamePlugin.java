@@ -149,11 +149,14 @@ import org.apache.commons.lang3.StringUtils;
 )
 public class BaMinigamePlugin extends Plugin
 {
-
 	public static final Color RED = new Color(228, 18, 31);
 	public static final Color DARK_GREEN = new Color(0, 153, 0);
 	public static final Color LIGHT_BLUE = new Color(60, 124, 240);
 	public static final Color LIGHT_RED = new Color(255, 35, 35);
+	// also for rangers
+	public static final Color FIGHTER_DEATH_COLOR = new Color(255, 48, 69);
+	public static final Color HEALER_DEATH_COLOR = new Color(34, 150, 40);
+	public static final Color RUNNER_DEATH_COLOR = new Color(51, 102, 255);
 	public static final Color DEFAULT_FLASH_COLOR = new Color(255, 255, 255, 126);
 	public static final int DEFAULT_ATTACK_STYLE_COLOR = 16750623;
 	public static final int WAVE_CHECKMARK_ICON_WIDTH = 13;
@@ -574,7 +577,6 @@ public class BaMinigamePlugin extends Plugin
 		}
 	}
 
-
 	@Subscribe
 	public void onWidgetLoaded(WidgetLoaded event)
 	{
@@ -623,7 +625,26 @@ public class BaMinigamePlugin extends Plugin
 				loadingPlayerRoles = true;
 				break;
 			}
+			case BaWidgetID.CONNAD_REWARDS_GROUP_ID:
+			{
+				if (config.scrollConnadRewards())
+				{
+					scrollConnadRewards();
+				}
+			}
 		}
+	}
+
+	private void scrollConnadRewards()
+	{
+		final Widget parent = client.getWidget(BaWidgetInfo.CONNAD_REWARDS_CONTENT.getGroupId(),
+			BaWidgetInfo.CONNAD_REWARDS_CONTENT.getChildId());
+		if (parent == null)
+		{
+			return;
+		}
+		client.runScript(ScriptID.UPDATE_SCROLLBAR, BaWidgetInfo.CONNAD_REWARDS_SCROLLBAR.getId(),
+			BaWidgetInfo.CONNAD_REWARDS_CONTENT.getId(), parent.getScrollHeight());
 	}
 
 	@Subscribe
@@ -713,6 +734,7 @@ public class BaMinigamePlugin extends Plugin
 			{
 				final MessageNode node = chatMessage.getMessageNode();
 				String nodeValue = Text.removeTags(node.getValue());
+				Color deathColor = FIGHTER_DEATH_COLOR;
 				final String npc = nodeValue.split(" ")[4];
 
 				Role role = wave.getRole();
@@ -727,14 +749,17 @@ public class BaMinigamePlugin extends Plugin
 						break;
 					case "Healers":
 						wave.setHealersKilled(true);
+						deathColor = HEALER_DEATH_COLOR;
 						break;
 					case "Runners":
 						wave.setRunnersKilled(true);
+						deathColor = RUNNER_DEATH_COLOR;
 						break;
 				}
 
 				if (config.deathMessageColor() != null)
 				{
+					deathColor = config.deathMessageColor();
 					if (role == Role.ATTACKER && (npc.equals("Fighters") || npc.equals("Rangers"))
 						|| role == Role.HEALER && npc.equals("Healers")
 						|| role == Role.DEFENDER && npc.equals("Runners"))
@@ -742,6 +767,12 @@ public class BaMinigamePlugin extends Plugin
 						nodeValue = ColorUtil.wrapWithColorTag(nodeValue, config.deathMessageColor());
 						node.setValue(nodeValue);
 					}
+				}
+				else
+				{
+					// preserve original color tag on npc name
+					nodeValue = node.getValue();
+					node.setValue(nodeValue);
 				}
 
 				if (wave.getTimer() != null)
@@ -757,7 +788,7 @@ public class BaMinigamePlugin extends Plugin
 						String timeElapsed = String.format(timeFormat, time) + "s";
 						if (config.enableGameChatColors())
 						{
-							timeElapsed = ColorUtil.wrapWithColorTag(timeElapsed, Color.RED);
+							timeElapsed = ColorUtil.wrapWithColorTag(timeElapsed, deathColor);
 						}
 
 						node.setValue(nodeValue + " " + timeElapsed);
@@ -2296,13 +2327,14 @@ public class BaMinigamePlugin extends Plugin
 			{
 				return;
 			}
-			
+
 			if (lastListen.equalsIgnoreCase("Poison Worms") && currentListen.equalsIgnoreCase("Pois. Worms")
 				|| lastListen.equalsIgnoreCase("Pois. Worms") && currentListen.equalsIgnoreCase("Poison Worms")
 				|| lastListen.equalsIgnoreCase("Poison Tofu") && currentListen.equalsIgnoreCase("Pois. Tofu")
 				|| lastListen.equalsIgnoreCase("Pois. Tofu") && currentListen.equalsIgnoreCase("Poison Tofu")
 				|| lastListen.equalsIgnoreCase("Poison Meat") && currentListen.equalsIgnoreCase("Pois. Meat")
-				|| lastListen.equalsIgnoreCase("Pois. Meat") && currentListen.equalsIgnoreCase("Poison Meat")) {
+				|| lastListen.equalsIgnoreCase("Pois. Meat") && currentListen.equalsIgnoreCase("Poison Meat"))
+			{
 				// Ignore differences from players calls vs Horn of Glory calls
 				return;
 			}

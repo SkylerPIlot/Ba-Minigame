@@ -45,6 +45,8 @@ public class BaWidgetID
 
 	public static final int COMBAT_GROUP_ID = 593;
 
+	public static final int CONNAD_REWARDS_GROUP_ID = 491;
+
 	static class BarbarianAssault
 	{
 		static final int WAVE_INFO = 2;
@@ -126,6 +128,12 @@ public class BaWidgetID
 		static final int STYLE_FOUR = 16;
 		static final int STYLE_FOUR_ICON = 18;
 		static final int STYLE_FOUR_TEXT = 19;
+	}
+
+	static class Connad
+	{
+		static final int CONTENT = 2;
+		static final int SCROLLBAR = 4;
 	}
 
 }

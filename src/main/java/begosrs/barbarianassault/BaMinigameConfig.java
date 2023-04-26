@@ -135,6 +135,17 @@ public interface BaMinigameConfig extends Config
 	}
 
 	@ConfigItem(
+		keyName = "scrollConnadRewards",
+		name = "Scroll Connad's Rewards",
+		description = "Auto scrolls to the bottom of Connad's rewards, useful for high gambles",
+		position = 3
+	)
+	default boolean scrollConnadRewards()
+	{
+		return false;
+	}
+
+	@ConfigItem(
 		keyName = "showWaveCompleted",
 		name = "Display wave completed icon",
 		description = "Replaces the wave icon for a checkmark when role npcs are dead",

@@ -93,8 +93,11 @@ public class MenuEntrySwapper
 		addSwap("drink-from", "take-from", config::swapHealerSpring);
 
 		addHide("attack", "penance", () -> shouldHideAttOptions(Role.COLLECTOR));
+		addHide("attack", "queen spawn", () -> shouldHideAttOptions(Role.COLLECTOR));
 		addHide("attack", "penance", () -> shouldHideAttOptions(Role.DEFENDER));
+		addHide("attack", "queen spawn", () -> shouldHideAttOptions(Role.DEFENDER));
 		addHide("attack", "penance", () -> shouldHideAttOptions(Role.HEALER));
+		addHide("attack", "queen spawn", () -> shouldHideAttOptions(Role.HEALER));
 	}
 
 	/**
