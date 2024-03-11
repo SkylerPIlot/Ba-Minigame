@@ -110,6 +110,10 @@ public class HoppersOverlay extends Overlay
 			for (Map.Entry<CollectorEgg, Integer> eggCount : plugin.getCannonEggs().entrySet())
 			{
 				final CollectorEgg collectorEgg = eggCount.getKey();
+				if (collectorEgg != CollectorEgg.OMEGA && config.onlyShowOmegaHopper())
+				{
+					continue;
+				}
 				final int count = eggCount.getValue();
 
 				String message = String.format("%s %s", QuantityFormatter.quantityToStackSize(count), collectorEgg.getName());

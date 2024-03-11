@@ -255,11 +255,23 @@ public interface BaMinigameConfig extends Config
 	}
 
 	@ConfigItem(
+		keyName = "onlyShowOmegaHopper",
+		name = "Cannon eggs: omega only",
+		description = "If cannon eggs are enabled, hides eggs other than omega",
+		section = inGameSection,
+		position = 9
+	)
+	default boolean onlyShowOmegaHopper()
+	{
+		return false;
+	}
+
+	@ConfigItem(
 		keyName = "inventoryHighlightMode",
 		name = "Inventory highlight",
 		description = "Define the mode of all inventory highlights",
 		section = inGameSection,
-		position = 9
+		position = 10
 	)
 	default InventoryHighlightMode inventoryHighlightMode()
 	{
@@ -271,7 +283,7 @@ public interface BaMinigameConfig extends Config
 		name = "Ground items highlight",
 		description = "Show ground item highlights",
 		section = inGameSection,
-		position = 10
+		position = 11
 	)
 	default boolean showGroundItemHighlights()
 	{
@@ -283,7 +295,7 @@ public interface BaMinigameConfig extends Config
 		name = "Ground tiles highlight",
 		description = "Configures whether or not to highlight tiles containing ground items",
 		section = inGameSection,
-		position = 11
+		position = 12
 	)
 	default boolean highlightGroundTiles()
 	{
@@ -295,7 +307,7 @@ public interface BaMinigameConfig extends Config
 		name = "Call correction",
 		description = "Write a chat message if your teammate corrects their call",
 		section = inGameSection,
-		position = 12
+		position = 13
 	)
 	default boolean announceCallCorrection()
 	{
