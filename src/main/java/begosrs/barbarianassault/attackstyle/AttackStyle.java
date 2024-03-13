@@ -24,8 +24,10 @@
  */
 package begosrs.barbarianassault.attackstyle;
 
+import lombok.Getter;
 import net.runelite.api.Skill;
 
+@Getter
 public enum AttackStyle
 {
 	ACCURATE("Accurate", Skill.ATTACK),
@@ -45,15 +47,5 @@ public enum AttackStyle
 	{
 		this.name = name;
 		this.skills = skills;
-	}
-
-	public String getName()
-	{
-		return name;
-	}
-
-	public Skill[] getSkills()
-	{
-		return skills;
 	}
 }

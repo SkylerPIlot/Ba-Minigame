@@ -24,21 +24,20 @@
  */
 package begosrs.barbarianassault.points;
 
+import java.awt.Color;
+import java.awt.image.BufferedImage;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.ui.overlay.infobox.InfoBox;
 
-import java.awt.Color;
-import java.awt.image.BufferedImage;
-
+@Setter
+@Getter
 @ToString
 public class RolePointsInfoBox extends InfoBox
 {
 
-	@Getter
-	@Setter
 	private int points;
 
 	public RolePointsInfoBox(BufferedImage image, Plugin plugin, int points)
@@ -58,5 +57,4 @@ public class RolePointsInfoBox extends InfoBox
 	{
 		return Color.WHITE;
 	}
-
 }

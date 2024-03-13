@@ -115,6 +115,7 @@ import net.runelite.api.events.ScriptPostFired;
 import net.runelite.api.events.VarbitChanged;
 import net.runelite.api.events.WidgetClosed;
 import net.runelite.api.events.WidgetLoaded;
+import net.runelite.api.widgets.InterfaceID;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetConfig;
 import net.runelite.api.widgets.WidgetID;
@@ -180,6 +181,8 @@ public class BaMinigamePlugin extends Plugin
 		BA_TILE_START_Y = 3560,
 		BA_TILE_END_Y = 3579;
 	private static final int WAVE_ICON_WIDTH = 17;
+	private static final int WIDGET_CLICK_MASK = WidgetConfig.USE_GROUND_ITEM | WidgetConfig.USE_NPC
+		| WidgetConfig.USE_OBJECT | WidgetConfig.USE_WIDGET;
 	private static final BaWidgetInfo[] TEAM_PLAYERS_ROLES_WIDGETS = {
 		BaWidgetInfo.BA_TEAM_PLAYER1_ROLE, BaWidgetInfo.BA_TEAM_PLAYER2_ROLE, BaWidgetInfo.BA_TEAM_PLAYER3_ROLE,
 		BaWidgetInfo.BA_TEAM_PLAYER4_ROLE, BaWidgetInfo.BA_TEAM_PLAYER5_ROLE
@@ -620,7 +623,7 @@ public class BaMinigamePlugin extends Plugin
 				startWave(Role.HEALER, config.showRunnerTickTimerHealer());
 				break;
 			}
-			case WidgetID.BA_TEAM_GROUP_ID:
+			case InterfaceID.BA_TEAM:
 			{
 				loadingPlayerRoles = true;
 				break;
@@ -650,7 +653,7 @@ public class BaMinigamePlugin extends Plugin
 	@Subscribe
 	public void onWidgetClosed(WidgetClosed event)
 	{
-		if (event.getGroupId() == WidgetID.BA_TEAM_GROUP_ID)
+		if (event.getGroupId() == InterfaceID.BA_TEAM)
 		{
 			loadingPlayerRoles = false;
 		}
@@ -1388,8 +1391,7 @@ public class BaMinigamePlugin extends Plugin
 			roleCounter.setXTextAlignment(WidgetTextAlignment.RIGHT);
 			roleCounter.setXPositionMode(WidgetPositionMode.ABSOLUTE_RIGHT);
 			roleCounter.setYPositionMode(WidgetPositionMode.ABSOLUTE_LEFT);
-			roleCounter.setClickMask(WidgetConfig.USE_GROUND_ITEM | WidgetConfig.USE_ITEM | WidgetConfig.USE_NPC
-				| WidgetConfig.USE_OBJECT | WidgetConfig.USE_WIDGET);
+			roleCounter.setClickMask(WIDGET_CLICK_MASK);
 			roleCounter.setNoClickThrough(false);
 			roleCounter.revalidate();
 
@@ -1415,8 +1417,7 @@ public class BaMinigamePlugin extends Plugin
 			}
 			roleCounterIcon.setOriginalX(380);
 			roleCounterIcon.setOriginalY(config.hideTeammateRole() ? 64 : 87);
-			roleCounterIcon.setClickMask(WidgetConfig.USE_GROUND_ITEM | WidgetConfig.USE_ITEM | WidgetConfig.USE_NPC
-				| WidgetConfig.USE_OBJECT | WidgetConfig.USE_WIDGET);
+			roleCounterIcon.setClickMask(WIDGET_CLICK_MASK);
 			roleCounterIcon.setNoClickThrough(false);
 			roleCounterIcon.revalidate();
 		}
@@ -1466,8 +1467,7 @@ public class BaMinigamePlugin extends Plugin
 		callTimer.setXPositionMode(WidgetPositionMode.ABSOLUTE_RIGHT);
 		callTimer.setYPositionMode(WidgetPositionMode.ABSOLUTE_LEFT);
 		callTimer.setText("- - -");
-		callTimer.setClickMask(WidgetConfig.USE_GROUND_ITEM | WidgetConfig.USE_ITEM | WidgetConfig.USE_NPC
-			| WidgetConfig.USE_OBJECT | WidgetConfig.USE_WIDGET);
+		callTimer.setClickMask(WIDGET_CLICK_MASK);
 		callTimer.setNoClickThrough(false);
 		callTimer.revalidate();
 
@@ -1477,8 +1477,7 @@ public class BaMinigamePlugin extends Plugin
 		callTimerIcon.setOriginalY(iconOriginalY);
 		callTimerIcon.setOriginalHeight(13);
 		callTimerIcon.setOriginalWidth(17);
-		callTimerIcon.setClickMask(WidgetConfig.USE_GROUND_ITEM | WidgetConfig.USE_ITEM | WidgetConfig.USE_NPC
-			| WidgetConfig.USE_OBJECT | WidgetConfig.USE_WIDGET);
+		callTimerIcon.setClickMask(WIDGET_CLICK_MASK);
 		callTimerIcon.setNoClickThrough(false);
 		callTimerIcon.revalidate();
 	}
@@ -2178,7 +2177,7 @@ public class BaMinigamePlugin extends Plugin
 		for (String item : list)
 		{
 			item = item.trim();
-			if (item.length() > 0 && StringUtils.containsIgnoreCase(hiddenItems, item))
+			if (!item.isEmpty() && StringUtils.containsIgnoreCase(hiddenItems, item))
 			{
 				// regex to replace any white spaces, followed by 0 or more commas, followed by any white spaces,
 				// (?i) mode to match case insensitive, followed by any white spaces, followed by 0 or more commas,
@@ -2212,7 +2211,7 @@ public class BaMinigamePlugin extends Plugin
 			configsBuilder.append(config).append("=").append(value);
 			configManager.setConfiguration(BARBARIAN_ASSAULT_CONFIG_GROUP, config, false);
 		}
-		if (config.getBarbarianAssaultConfigs().length() == 0)
+		if (config.getBarbarianAssaultConfigs().isEmpty())
 		{
 			config.setBarbarianAssaultConfigs(configsBuilder.toString());
 		}

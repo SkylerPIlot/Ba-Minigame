@@ -26,10 +26,9 @@ package begosrs.barbarianassault.hoppers;
 
 import begosrs.barbarianassault.BaMinigamePlugin;
 import begosrs.barbarianassault.api.BaVarbits;
+import java.awt.Color;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-
-import java.awt.Color;
 
 @Getter
 @RequiredArgsConstructor
@@ -40,11 +39,8 @@ public enum CollectorEgg
 	RED("Red", BaMinigamePlugin.LIGHT_RED, BaVarbits.BA_CANNON_RED_EGGS),
 	GREEN("Green", Color.GREEN, BaVarbits.BA_CANNON_GREEN_EGGS);
 
-	@Getter
 	private final String name;
-	@Getter
 	private final Color color;
-	@Getter
 	private final BaVarbits varbits;
 
 	@Override

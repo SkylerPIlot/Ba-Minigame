@@ -66,7 +66,7 @@ public class BrokenTrapsOverlay extends Overlay
 		this.config = config;
 		this.plugin = plugin;
 		setPosition(OverlayPosition.DYNAMIC);
-		setPriority(OverlayPriority.LOW);
+		setPriority(0f);
 		setLayer(OverlayLayer.ABOVE_SCENE);
 	}
 

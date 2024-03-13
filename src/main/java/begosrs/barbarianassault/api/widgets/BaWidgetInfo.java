@@ -25,6 +25,8 @@
  */
 package begosrs.barbarianassault.api.widgets;
 
+import lombok.Getter;
+import net.runelite.api.widgets.InterfaceID;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetID;
 
@@ -33,13 +35,14 @@ import net.runelite.api.widgets.WidgetID;
  * <p>
  * For getting a specific widget from the client, see {@link net.runelite.api.Client#getWidget(int, int)}.
  */
+@Getter
 public enum BaWidgetInfo
 {
-	BA_TEAM_PLAYER1_ROLE(WidgetID.BA_TEAM_GROUP_ID, BaWidgetID.BarbarianAssault.Team.PLAYER1_ROLE),
-	BA_TEAM_PLAYER2_ROLE(WidgetID.BA_TEAM_GROUP_ID, BaWidgetID.BarbarianAssault.Team.PLAYER2_ROLE),
-	BA_TEAM_PLAYER3_ROLE(WidgetID.BA_TEAM_GROUP_ID, BaWidgetID.BarbarianAssault.Team.PLAYER3_ROLE),
-	BA_TEAM_PLAYER4_ROLE(WidgetID.BA_TEAM_GROUP_ID, BaWidgetID.BarbarianAssault.Team.PLAYER4_ROLE),
-	BA_TEAM_PLAYER5_ROLE(WidgetID.BA_TEAM_GROUP_ID, BaWidgetID.BarbarianAssault.Team.PLAYER5_ROLE),
+	BA_TEAM_PLAYER1_ROLE(InterfaceID.BA_TEAM, BaWidgetID.BarbarianAssault.Team.PLAYER1_ROLE),
+	BA_TEAM_PLAYER2_ROLE(InterfaceID.BA_TEAM, BaWidgetID.BarbarianAssault.Team.PLAYER2_ROLE),
+	BA_TEAM_PLAYER3_ROLE(InterfaceID.BA_TEAM, BaWidgetID.BarbarianAssault.Team.PLAYER3_ROLE),
+	BA_TEAM_PLAYER4_ROLE(InterfaceID.BA_TEAM, BaWidgetID.BarbarianAssault.Team.PLAYER4_ROLE),
+	BA_TEAM_PLAYER5_ROLE(InterfaceID.BA_TEAM, BaWidgetID.BarbarianAssault.Team.PLAYER5_ROLE),
 
 	BA_ATTACKER_WAVE_INFO(BaWidgetID.BA_ATTACKER_GROUP_ID, BaWidgetID.BarbarianAssault.WAVE_INFO),
 	BA_ATTACKER_CALL_FLASH(BaWidgetID.BA_ATTACKER_GROUP_ID, BaWidgetID.BarbarianAssault.CALL_FLASH),
@@ -131,42 +134,6 @@ public enum BaWidgetInfo
 	}
 
 	/**
-	 * Utility method that converts an ID returned by {@link #getId()} back
-	 * to its group ID.
-	 *
-	 * @param id passed group-child ID
-	 * @return the group ID
-	 */
-	public static int TO_GROUP(int id)
-	{
-		return id >>> 16;
-	}
-
-	/**
-	 * Utility method that converts an ID returned by {@link #getId()} back
-	 * to its child ID.
-	 *
-	 * @param id passed group-child ID
-	 * @return the child ID
-	 */
-	public static int TO_CHILD(int id)
-	{
-		return id & 0xFFFF;
-	}
-
-	/**
-	 * Packs the group and child IDs into a single integer.
-	 *
-	 * @param groupId the group ID
-	 * @param childId the child ID
-	 * @return the packed ID
-	 */
-	public static int PACK(int groupId, int childId)
-	{
-		return groupId << 16 | childId;
-	}
-
-	/**
 	 * Gets the ID of the group-child pairing.
 	 *
 	 * @return the ID
@@ -175,35 +142,4 @@ public enum BaWidgetInfo
 	{
 		return groupId << 16 | childId;
 	}
-
-	/**
-	 * Gets the group ID of the pair.
-	 *
-	 * @return the group ID
-	 */
-	public int getGroupId()
-	{
-		return groupId;
-	}
-
-	/**
-	 * Gets the ID of the child in the group.
-	 *
-	 * @return the child ID
-	 */
-	public int getChildId()
-	{
-		return childId;
-	}
-
-	/**
-	 * Gets the packed widget ID.
-	 *
-	 * @return the packed ID
-	 */
-	public int getPackedId()
-	{
-		return groupId << 16 | childId;
-	}
-
 }

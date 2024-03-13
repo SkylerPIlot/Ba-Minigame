@@ -25,18 +25,16 @@
 package begosrs.barbarianassault;
 
 import begosrs.barbarianassault.points.RolePointsTrackingMode;
-import lombok.Getter;
-
 import java.util.EnumMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import lombok.Getter;
 
+@Getter
 public class Session
 {
-	@Getter
 	private final List<Wave> waves;
-	@Getter
 	private final Map<Role, Integer> rolePoints;
 
 	public Session()
@@ -75,21 +73,21 @@ public class Session
 					break;
 			}
 			boolean isPlayerTracking = playerRoleIndex >= 0
-					  && playerRoles[playerRoleIndex] != null;
+				&& playerRoles[playerRoleIndex] != null;
 			if (trackingMode == RolePointsTrackingMode.ALL
-					  || trackingMode == RolePointsTrackingMode.MINE && myRole == role
-					  || trackingMode == RolePointsTrackingMode.ATTACKER && Role.ATTACKER == role
-					  || trackingMode == RolePointsTrackingMode.DEFENDER && Role.DEFENDER == role
-					  || trackingMode == RolePointsTrackingMode.HEALER && Role.HEALER == role
-					  || trackingMode == RolePointsTrackingMode.COLLECTOR && Role.COLLECTOR == role
-					  || isPlayerTracking && playerRoles[playerRoleIndex] == role)
+				|| trackingMode == RolePointsTrackingMode.MINE && myRole == role
+				|| trackingMode == RolePointsTrackingMode.ATTACKER && Role.ATTACKER == role
+				|| trackingMode == RolePointsTrackingMode.DEFENDER && Role.DEFENDER == role
+				|| trackingMode == RolePointsTrackingMode.HEALER && Role.HEALER == role
+				|| trackingMode == RolePointsTrackingMode.COLLECTOR && Role.COLLECTOR == role
+				|| isPlayerTracking && playerRoles[playerRoleIndex] == role)
 			{
 				rolePoints.merge(role, points[role.ordinal()], Integer::sum);
 			}
 			if (wave.getNumber() == Round.ENDING_WAVE)
 			{
 				if (trackingMode == RolePointsTrackingMode.MINE && role != myRole
-						  || isPlayerTracking && playerRoles[playerRoleIndex] != role)
+					|| isPlayerTracking && playerRoles[playerRoleIndex] != role)
 				{
 					rolePoints.merge(role, 5, Integer::sum);
 				}

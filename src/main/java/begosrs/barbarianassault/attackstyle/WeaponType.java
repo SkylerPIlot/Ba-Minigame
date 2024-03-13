@@ -24,10 +24,6 @@
  */
 package begosrs.barbarianassault.attackstyle;
 
-import com.google.common.collect.ImmutableMap;
-
-import java.util.Map;
-
 import static begosrs.barbarianassault.attackstyle.AttackStyle.ACCURATE;
 import static begosrs.barbarianassault.attackstyle.AttackStyle.AGGRESSIVE;
 import static begosrs.barbarianassault.attackstyle.AttackStyle.CASTING;
@@ -37,7 +33,11 @@ import static begosrs.barbarianassault.attackstyle.AttackStyle.DEFENSIVE_CASTING
 import static begosrs.barbarianassault.attackstyle.AttackStyle.LONGRANGE;
 import static begosrs.barbarianassault.attackstyle.AttackStyle.OTHER;
 import static begosrs.barbarianassault.attackstyle.AttackStyle.RANGING;
+import com.google.common.collect.ImmutableMap;
+import java.util.Map;
+import lombok.Getter;
 
+@Getter
 public enum WeaponType
 {
 	TYPE_0(ACCURATE, AGGRESSIVE, null, DEFENSIVE),
@@ -93,10 +93,5 @@ public enum WeaponType
 	public static WeaponType getWeaponType(int id)
 	{
 		return weaponTypes.get(id);
-	}
-
-	public AttackStyle[] getAttackStyles()
-	{
-		return attackStyles;
 	}
 }

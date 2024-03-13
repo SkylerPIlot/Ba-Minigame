@@ -33,15 +33,13 @@ import net.runelite.client.ui.overlay.infobox.InfoBox;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 
+@Setter
+@Getter
 @ToString
 public class DeathTimeInfoBox extends InfoBox
 {
-	@Getter
-	@Setter
 	private float deathTime;
 
-	@Getter
-	@Setter
 	private String format;
 
 	public DeathTimeInfoBox(BufferedImage image, Plugin plugin, float deathTime, String format)
@@ -62,5 +60,4 @@ public class DeathTimeInfoBox extends InfoBox
 	{
 		return Color.WHITE;
 	}
-
 }
