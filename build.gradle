@@ -24,7 +24,7 @@ dependencies {
 }
 
 group = 'begosrs.barbarianassault'
-version = '1.70'
+version = '1.71'
 sourceCompatibility = '1.8'
 
 tasks.withType(JavaCompile) {
