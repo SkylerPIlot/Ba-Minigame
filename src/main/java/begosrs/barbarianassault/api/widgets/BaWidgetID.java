@@ -116,18 +116,18 @@ public class BaWidgetID
 
 	static class Combat
 	{
-		static final int STYLE_ONE = 4;
-		static final int STYLE_ONE_ICON = 6;
-		static final int STYLE_ONE_TEXT = 7;
-		static final int STYLE_TWO = 8;
-		static final int STYLE_TWO_ICON = 10;
-		static final int STYLE_TWO_TEXT = 11;
-		static final int STYLE_THREE = 12;
-		static final int STYLE_THREE_ICON = 14;
-		static final int STYLE_THREE_TEXT = 15;
-		static final int STYLE_FOUR = 16;
-		static final int STYLE_FOUR_ICON = 18;
-		static final int STYLE_FOUR_TEXT = 19;
+		static final int STYLE_ONE = 5;
+		static final int STYLE_ONE_ICON = 7;
+		static final int STYLE_ONE_TEXT = 8;
+		static final int STYLE_TWO = 9;
+		static final int STYLE_TWO_ICON = 11;
+		static final int STYLE_TWO_TEXT = 12;
+		static final int STYLE_THREE = 13;
+		static final int STYLE_THREE_ICON = 15;
+		static final int STYLE_THREE_TEXT = 16;
+		static final int STYLE_FOUR = 17;
+		static final int STYLE_FOUR_ICON = 19;
+		static final int STYLE_FOUR_TEXT = 20;
 	}
 
 	static class Connad

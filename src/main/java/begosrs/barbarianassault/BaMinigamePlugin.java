@@ -29,8 +29,8 @@ import begosrs.barbarianassault.api.BaObjectID;
 import begosrs.barbarianassault.api.widgets.BaWidgetID;
 import begosrs.barbarianassault.api.widgets.BaWidgetInfo;
 import begosrs.barbarianassault.attackstyle.AttackStyle;
+import begosrs.barbarianassault.attackstyle.AttackStyleUtil;
 import begosrs.barbarianassault.attackstyle.AttackStyleWidget;
-import begosrs.barbarianassault.attackstyle.WeaponType;
 import begosrs.barbarianassault.deathtimes.DeathTimeInfoBox;
 import begosrs.barbarianassault.deathtimes.DeathTimesMode;
 import begosrs.barbarianassault.grounditems.GroundItem;
@@ -118,7 +118,6 @@ import net.runelite.api.events.WidgetLoaded;
 import net.runelite.api.widgets.InterfaceID;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetConfig;
-import net.runelite.api.widgets.WidgetID;
 import net.runelite.api.widgets.WidgetPositionMode;
 import net.runelite.api.widgets.WidgetTextAlignment;
 import net.runelite.api.widgets.WidgetType;
@@ -225,6 +224,8 @@ public class BaMinigamePlugin extends Plugin
 	private KeyManager keyManager;
 	@Inject
 	private MenuEntrySwapper menuEntrySwapper;
+	@Inject
+	private AttackStyleUtil attackStyleUtil;
 	@Inject
 	private WaveInfoOverlay waveInfoOverlay;
 	@Inject
@@ -1069,7 +1070,6 @@ public class BaMinigamePlugin extends Plugin
 
 	private void updateAttackStyleText(String listen)
 	{
-
 		restoreAttackStyleText();
 
 		if (!config.highlightAttackStyle() || listen == null || getRole() != Role.ATTACKER)
@@ -1078,10 +1078,12 @@ public class BaMinigamePlugin extends Plugin
 		}
 
 		final int var = client.getVarbitValue(Varbits.EQUIPPED_WEAPON_TYPE);
-		final AttackStyle[] styles = WeaponType.getWeaponType(var).getAttackStyles();
+		final AttackStyle[] styles = attackStyleUtil.getWeaponTypeStyles(var);
+
 		for (int i = 0; i < styles.length; i++)
 		{
 			final AttackStyle style = styles[i];
+
 			if (style == null || !listen.startsWith(style.getName()))
 			{
 				continue;
@@ -1206,10 +1208,16 @@ public class BaMinigamePlugin extends Plugin
 		final int color = attackStyleTextColor != null ? attackStyleTextColor : DEFAULT_ATTACK_STYLE_COLOR;
 
 		final int var = client.getVarbitValue(Varbits.EQUIPPED_WEAPON_TYPE);
-		final AttackStyle[] styles = WeaponType.getWeaponType(var).getAttackStyles();
+		final AttackStyle[] styles = attackStyleUtil.getWeaponTypeStyles(var);
+
 		for (int i = 0; i < styles.length; i++)
 		{
 			AttackStyle style = styles[i];
+			if (style == null)
+			{
+				continue;
+			}
+
 			if (style == AttackStyle.CASTING || style == AttackStyle.DEFENSIVE_CASTING)
 			{
 				// magic attack styles will never be highlighted
