@@ -171,7 +171,7 @@ public class Round
 			int pts = Math.max(0, rolesPoints[i]);
 			if (bonus)
 			{
-				pts *= 1.1;
+				pts = (int) (pts * 1.1);
 			}
 			String points = String.valueOf(pts);
 			message.append(roleName + ": ");

@@ -27,23 +27,6 @@ package begosrs.barbarianassault.grounditems;
 import begosrs.barbarianassault.BaMinigameConfig;
 import begosrs.barbarianassault.BaMinigamePlugin;
 import begosrs.barbarianassault.Role;
-import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.Client;
-import net.runelite.api.ItemID;
-import net.runelite.api.Perspective;
-import net.runelite.api.Player;
-import net.runelite.api.Point;
-import net.runelite.api.coords.LocalPoint;
-import net.runelite.api.coords.WorldPoint;
-import net.runelite.client.ui.overlay.OverlayLayer;
-import net.runelite.client.ui.overlay.OverlayPanel;
-import net.runelite.client.ui.overlay.OverlayPosition;
-import net.runelite.client.ui.overlay.OverlayUtil;
-import net.runelite.client.ui.overlay.components.TextComponent;
-import net.runelite.client.util.QuantityFormatter;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
@@ -52,6 +35,22 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import lombok.extern.slf4j.Slf4j;
+import net.runelite.api.Client;
+import net.runelite.api.Perspective;
+import net.runelite.api.Player;
+import net.runelite.api.Point;
+import net.runelite.api.coords.LocalPoint;
+import net.runelite.api.coords.WorldPoint;
+import net.runelite.api.gameval.ItemID;
+import net.runelite.client.ui.overlay.OverlayLayer;
+import net.runelite.client.ui.overlay.OverlayPanel;
+import net.runelite.client.ui.overlay.OverlayPosition;
+import net.runelite.client.ui.overlay.OverlayUtil;
+import net.runelite.client.ui.overlay.components.TextComponent;
+import net.runelite.client.util.QuantityFormatter;
 
 @Slf4j
 @Singleton
@@ -78,7 +77,7 @@ public class GroundItemsOverlay extends OverlayPanel
 
 	@Inject
 	public GroundItemsOverlay(final Client client, final BaMinigamePlugin plugin,
-									  final BaMinigameConfig config)
+							  final BaMinigameConfig config)
 	{
 		super(plugin);
 		setPosition(OverlayPosition.DYNAMIC);
@@ -135,9 +134,9 @@ public class GroundItemsOverlay extends OverlayPanel
 		final GroundEggsMode groundEggsMode = config.highlightGroundEggsMode();
 
 		final Predicate<GroundItem> filter = item ->
-				  groundEggsMode == GroundEggsMode.ALL
-							 || groundEggsMode == GroundEggsMode.CALLED &&
-							 (item.getId() == ItemID.YELLOW_EGG || calledEgg != null && calledEgg.startsWith(item.getName()));
+			groundEggsMode == GroundEggsMode.ALL
+				|| groundEggsMode == GroundEggsMode.CALLED &&
+				(item.getId() == ItemID.BARBASSAULT_EGG_04 || calledEgg != null && calledEgg.startsWith(item.getName()));
 
 		renderGroundItems(graphics, eggsList, filter);
 	}
@@ -212,8 +211,8 @@ public class GroundItemsOverlay extends OverlayPanel
 				else
 				{
 					itemStringBuilder.append(" (")
-							  .append(QuantityFormatter.quantityToStackSize(item.getQuantity()))
-							  .append(")");
+						.append(QuantityFormatter.quantityToStackSize(item.getQuantity()))
+						.append(")");
 				}
 			}
 
@@ -221,10 +220,10 @@ public class GroundItemsOverlay extends OverlayPanel
 			itemStringBuilder.setLength(0);
 
 			final Point textPoint = Perspective.getCanvasTextLocation(client,
-					  graphics,
-					  groundPoint,
-					  itemString,
-					  item.getHeight() + OFFSET_Z);
+				graphics,
+				groundPoint,
+				itemString,
+				item.getHeight() + OFFSET_Z);
 
 			if (textPoint == null)
 			{

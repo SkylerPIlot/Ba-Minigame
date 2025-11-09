@@ -24,6 +24,8 @@
  */
 package begosrs.barbarianassault.api.widgets;
 
+import net.runelite.api.gameval.InterfaceID;
+
 /**
  * Utility class mapping widget IDs to global constants.
  * <p>
@@ -43,7 +45,7 @@ public class BaWidgetID
 	public static final int BA_HEALER_GROUP_ID = 488;
 	public static final int BA_REWARD_GROUP_ID = 497;
 
-	public static final int COMBAT_GROUP_ID = 593;
+	public static final int COMBAT_GROUP_ID = InterfaceID.COMBAT_INTERFACE;
 
 	public static final int CONNAD_REWARDS_GROUP_ID = 491;
 
@@ -116,18 +118,18 @@ public class BaWidgetID
 
 	static class Combat
 	{
-		static final int STYLE_ONE = 5;
-		static final int STYLE_ONE_ICON = 7;
-		static final int STYLE_ONE_TEXT = 8;
-		static final int STYLE_TWO = 9;
-		static final int STYLE_TWO_ICON = 11;
-		static final int STYLE_TWO_TEXT = 12;
-		static final int STYLE_THREE = 13;
-		static final int STYLE_THREE_ICON = 15;
-		static final int STYLE_THREE_TEXT = 16;
-		static final int STYLE_FOUR = 17;
-		static final int STYLE_FOUR_ICON = 19;
-		static final int STYLE_FOUR_TEXT = 20;
+		static final int STYLE_ONE = 6;
+		static final int STYLE_ONE_ICON = 8;
+		static final int STYLE_ONE_TEXT = 9;
+		static final int STYLE_TWO = 10;
+		static final int STYLE_TWO_ICON = 12;
+		static final int STYLE_TWO_TEXT = 13;
+		static final int STYLE_THREE = 14;
+		static final int STYLE_THREE_ICON = 16;
+		static final int STYLE_THREE_TEXT = 17;
+		static final int STYLE_FOUR = 18;
+		static final int STYLE_FOUR_ICON = 20;
+		static final int STYLE_FOUR_TEXT = 21;
 	}
 
 	static class Connad

@@ -85,19 +85,19 @@ public class MenuEntrySwapper
 		addSwap("climb-down", "quick-start", config::swapQuickStart);
 
 		addSwap("look-in", "empty", config::swapCollectionBag);
-		addSwap("use", "tell-defensive", "collector horn", config::swapCollectorHorn);
-		addSwap("use", "destroy", "red egg", config::swapDestroyEggs);
-		addSwap("use", "destroy", "green egg", config::swapDestroyEggs);
-		addSwap("use", "destroy", "blue egg", config::swapDestroyEggs);
+		addSwapUseOnTarget("tell-defensive", "collector horn", config::swapCollectorHorn);
+		addSwapUseOnTarget("destroy", "red egg", config::swapDestroyEggs);
+		addSwapUseOnTarget("destroy", "green egg", config::swapDestroyEggs);
+		addSwapUseOnTarget("destroy", "blue egg", config::swapDestroyEggs);
 
 		addSwap("drink-from", "take-from", config::swapHealerSpring);
 
-		addHide("attack", "penance", () -> shouldHideAttOptions(Role.COLLECTOR));
-		addHide("attack", "queen spawn", () -> shouldHideAttOptions(Role.COLLECTOR));
-		addHide("attack", "penance", () -> shouldHideAttOptions(Role.DEFENDER));
-		addHide("attack", "queen spawn", () -> shouldHideAttOptions(Role.DEFENDER));
-		addHide("attack", "penance", () -> shouldHideAttOptions(Role.HEALER));
-		addHide("attack", "queen spawn", () -> shouldHideAttOptions(Role.HEALER));
+		addHideAttack("penance", () -> shouldHideAttOptions(Role.COLLECTOR));
+		addHideAttack("queen spawn", () -> shouldHideAttOptions(Role.COLLECTOR));
+		addHideAttack("penance", () -> shouldHideAttOptions(Role.DEFENDER));
+		addHideAttack("queen spawn", () -> shouldHideAttOptions(Role.DEFENDER));
+		addHideAttack("penance", () -> shouldHideAttOptions(Role.HEALER));
+		addHideAttack("queen spawn", () -> shouldHideAttOptions(Role.HEALER));
 	}
 
 	/**
@@ -145,7 +145,7 @@ public class MenuEntrySwapper
 			return;
 		}
 
-		MenuEntry[] menuEntries = client.getMenuEntries();
+		MenuEntry[] menuEntries = client.getMenu().getMenuEntries();
 
 		// Build option map for quick lookup in findIndex
 		int idx = 0;
@@ -164,10 +164,10 @@ public class MenuEntrySwapper
 		}
 
 		// Perform hiding
-		MenuEntry[] filteredEntries = filterHidden(client.getMenuEntries());
+		MenuEntry[] filteredEntries = filterHidden(client.getMenu().getMenuEntries());
 		if (filteredEntries.length != menuEntries.length)
 		{
-			client.setMenuEntries(filteredEntries);
+			client.getMenu().setMenuEntries(filteredEntries);
 		}
 	}
 
@@ -219,9 +219,9 @@ public class MenuEntrySwapper
 		addSwap(option, s -> true, swappedOption, enabled);
 	}
 
-	private void addSwap(String option, String swappedOption, String target, Supplier<Boolean> enabled)
+	private void addSwapUseOnTarget(String swappedOption, String target, Supplier<Boolean> enabled)
 	{
-		addSwap(option, s -> Objects.equals(s, target), swappedOption, enabled);
+		addSwap("use", s -> Objects.equals(s, target), swappedOption, enabled);
 	}
 
 	private void addSwap(String option, Predicate<String> targetPredicate, String swappedOption, Supplier<Boolean> enabled)
@@ -229,14 +229,14 @@ public class MenuEntrySwapper
 		swaps.put(option, new Swap(s -> true, targetPredicate, swappedOption, enabled, true));
 	}
 
-	private void addHide(String option, String targetContains, Supplier<Boolean> enabled)
+	private void addHideAttack(String targetContains, Supplier<Boolean> enabled)
 	{
-		hides.add(new Hide(s -> Objects.equals(s, option), s -> s.contains(targetContains), enabled, true));
+		hides.add(new Hide(s -> Objects.equals(s, "attack"), s -> s.contains(targetContains), enabled, true));
 	}
 
 	private boolean performSwap(String option, String target, int index, boolean strict)
 	{
-		MenuEntry[] menuEntries = client.getMenuEntries();
+		MenuEntry[] menuEntries = client.getMenu().getMenuEntries();
 
 		// find option to swap with
 		int optionIdx = findIndex(menuEntries, index, option, target, strict);
@@ -267,7 +267,7 @@ public class MenuEntrySwapper
 			entry2.setType(MenuAction.CC_OP);
 		}
 
-		client.setMenuEntries(entries);
+		client.getMenu().setMenuEntries(entries);
 
 		// Update optionIndexes
 		String option1 = Text.removeTags(entry1.getOption()).toLowerCase(),

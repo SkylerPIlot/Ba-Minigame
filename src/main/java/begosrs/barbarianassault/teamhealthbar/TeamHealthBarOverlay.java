@@ -47,6 +47,7 @@ public class TeamHealthBarOverlay extends Overlay
 	private final Client client;
 	private final BaMinigamePlugin plugin;
 	private final BaMinigameConfig config;
+
 	@Inject
 	private TeamHealthBarOverlay(Client client, BaMinigamePlugin plugin, BaMinigameConfig config)
 	{

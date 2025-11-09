@@ -34,8 +34,8 @@ import java.awt.Color;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.runelite.api.Client;
-import net.runelite.api.ItemID;
-import net.runelite.api.SpriteID;
+import net.runelite.api.gameval.ItemID;
+import net.runelite.api.gameval.SpriteID;
 import net.runelite.api.widgets.Widget;
 
 @Getter
@@ -50,7 +50,7 @@ public enum Role
 		BaWidgetInfo.BA_HORN_OF_GLORY_COLLECTOR_LISTEN_TEXT, BaWidgetInfo.BA_ATTACKER_ROLE_TEXT,
 		BaWidgetInfo.BA_ATTACKER_ROLE_SPRITE, BaSpriteID.BA_COLLECTOR_HORN_ICON, "Collector",
 		BaVarbits.BA_ATTACKER_ROLE_BASE_POINTS, BaVarbits.BA_ATTACKER_ROLE_MULTIPLIER,
-		SpriteID.BARBARIAN_ASSAULT_HORN_FOR_ATTACKER_ICON,
+		SpriteID.BarbassaultIcons._3,
 		BaModelID.BA_ATTACKER_ICON),
 	DEFENDER("Defender", BaMinigamePlugin.LIGHT_BLUE,
 		BaWidgetInfo.BA_DEFENDER_WAVE_INFO,
@@ -60,7 +60,7 @@ public enum Role
 		BaWidgetInfo.BA_HORN_OF_GLORY_HEALER_LISTEN_TEXT, BaWidgetInfo.BA_DEFENDER_ROLE_TEXT,
 		BaWidgetInfo.BA_DEFENDER_ROLE_SPRITE, BaSpriteID.BA_HEALER_HORN_ICON, "Healer",
 		BaVarbits.BA_DEFENDER_ROLE_BASE_POINTS, BaVarbits.BA_DEFENDER_ROLE_MULTIPLIER,
-		SpriteID.BARBARIAN_ASSAULT_HORN_FOR_DEFENDER_ICON,
+		SpriteID.BarbassaultIcons._4,
 		BaModelID.BA_DEFENDER_ICON),
 	COLLECTOR("Collector", Color.YELLOW,
 		BaWidgetInfo.BA_COLLECTOR_WAVE_INFO,
@@ -70,7 +70,7 @@ public enum Role
 		BaWidgetInfo.BA_HORN_OF_GLORY_ATTACKER_LISTEN_TEXT, BaWidgetInfo.BA_COLLECTOR_ROLE_TEXT,
 		BaWidgetInfo.BA_COLLECTOR_ROLE_SPRITE, BaSpriteID.BA_ATTACKER_HORN_ICON, "Attacker",
 		BaVarbits.BA_COLLECTOR_ROLE_BASE_POINTS, BaVarbits.BA_COLLECTOR_ROLE_MULTIPLIER,
-		SpriteID.BARBARIAN_ASSAULT_HORN_FOR_COLLECTOR_ICON,
+		SpriteID.BarbassaultIcons._5,
 		BaModelID.BA_COLLECTOR_ICON),
 	HEALER("Healer", BaMinigamePlugin.DARK_GREEN,
 		BaWidgetInfo.BA_HEALER_WAVE_INFO,
@@ -80,7 +80,7 @@ public enum Role
 		BaWidgetInfo.BA_HORN_OF_GLORY_DEFENDER_LISTEN_TEXT, BaWidgetInfo.BA_HEALER_ROLE_TEXT,
 		BaWidgetInfo.BA_HEALER_ROLE_SPRITE, BaSpriteID.BA_DEFENDER_HORN_ICON, "Defender",
 		BaVarbits.BA_HEALER_ROLE_POINTS, BaVarbits.BA_HEALER_ROLE_MULTIPLIER,
-		SpriteID.BARBARIAN_ASSAULT_HORN_FOR_HEALER_ICON,
+		SpriteID.BarbassaultIcons._6,
 		BaModelID.BA_HEALER_ICON);
 
 	private static final ImmutableMap<String, String> GLORY_CALLS = ImmutableMap.<String, String>builder()
@@ -99,22 +99,22 @@ public enum Role
 		.put("Blue egg", "Blue egg")
 		.build();
 	private static final ImmutableMap<String, Integer> ITEMS = ImmutableMap.<String, Integer>builder()
-		.put("Tofu", ItemID.TOFU)
-		.put("Crackers", ItemID.CRACKERS)
-		.put("Worms", ItemID.WORMS)
-		.put("Poison Worms", ItemID.POISONED_WORMS)
-		.put("Pois. Worms", ItemID.POISONED_WORMS)
-		.put("Poison Tofu", ItemID.POISONED_TOFU)
-		.put("Pois. Tofu", ItemID.POISONED_TOFU)
-		.put("Poison Meat", ItemID.POISONED_MEAT)
-		.put("Pois. Meat", ItemID.POISONED_MEAT)
-		.put("Controlled/Bullet/Wind", ItemID.BULLET_ARROW)
-		.put("Accurate/Field/Water", ItemID.FIELD_ARROW)
-		.put("Aggressive/Blunt/Earth", ItemID.BLUNT_ARROW)
-		.put("Defensive/Barbed/Fire", ItemID.BARBED_ARROW)
-		.put("Red eggs", ItemID.RED_EGG)
-		.put("Green eggs", ItemID.GREEN_EGG)
-		.put("Blue eggs", ItemID.BLUE_EGG)
+		.put("Tofu", ItemID.BARBASSAULT_RUNNER_FOOD2)
+		.put("Crackers", ItemID.BARBASSAULT_RUNNER_FOOD)
+		.put("Worms", ItemID.BARBASSAULT_RUNNER_FOOD3)
+		.put("Poison Worms", ItemID.BARBASSAULT_POISION_02)
+		.put("Pois. Worms", ItemID.BARBASSAULT_POISION_02)
+		.put("Poison Tofu", ItemID.BARBASSAULT_POISION_01)
+		.put("Pois. Tofu", ItemID.BARBASSAULT_POISION_01)
+		.put("Poison Meat", ItemID.BARBASSAULT_POISION_03)
+		.put("Pois. Meat", ItemID.BARBASSAULT_POISION_03)
+		.put("Controlled/Bullet/Wind", ItemID.BARBASSAULT_BULLET_ARROW)
+		.put("Accurate/Field/Water", ItemID.BARBASSAULT_FIELD_ARROW)
+		.put("Aggressive/Blunt/Earth", ItemID.BARBASSAULT_BLUNT_ARROW)
+		.put("Defensive/Barbed/Fire", ItemID.BARBASSAULT_BARBED_ARROW)
+		.put("Red eggs", ItemID.BARBASSAULT_EGG_02)
+		.put("Green eggs", ItemID.BARBASSAULT_EGG_01)
+		.put("Blue eggs", ItemID.BARBASSAULT_EGG_03)
 		.build();
 	private final String name;
 	private final Color color;

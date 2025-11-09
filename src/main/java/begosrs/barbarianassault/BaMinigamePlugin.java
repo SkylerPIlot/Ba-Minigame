@@ -25,7 +25,6 @@
 package begosrs.barbarianassault;
 
 import begosrs.barbarianassault.api.BaModelID;
-import begosrs.barbarianassault.api.BaObjectID;
 import begosrs.barbarianassault.api.widgets.BaWidgetID;
 import begosrs.barbarianassault.api.widgets.BaWidgetInfo;
 import begosrs.barbarianassault.attackstyle.AttackStyle;
@@ -84,21 +83,16 @@ import net.runelite.api.Client;
 import net.runelite.api.GameObject;
 import net.runelite.api.GameState;
 import net.runelite.api.GroundObject;
-import net.runelite.api.InventoryID;
 import net.runelite.api.Item;
 import net.runelite.api.ItemComposition;
 import net.runelite.api.ItemContainer;
-import net.runelite.api.ItemID;
 import net.runelite.api.MenuAction;
 import net.runelite.api.MenuEntry;
 import net.runelite.api.MessageNode;
-import net.runelite.api.ObjectID;
 import net.runelite.api.Player;
 import net.runelite.api.ScriptID;
-import net.runelite.api.SpriteID;
 import net.runelite.api.Tile;
 import net.runelite.api.TileItem;
-import net.runelite.api.Varbits;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.ClientTick;
@@ -115,7 +109,12 @@ import net.runelite.api.events.ScriptPostFired;
 import net.runelite.api.events.VarbitChanged;
 import net.runelite.api.events.WidgetClosed;
 import net.runelite.api.events.WidgetLoaded;
-import net.runelite.api.widgets.InterfaceID;
+import net.runelite.api.gameval.InterfaceID;
+import net.runelite.api.gameval.InventoryID;
+import net.runelite.api.gameval.ItemID;
+import net.runelite.api.gameval.ObjectID;
+import net.runelite.api.gameval.SpriteID;
+import net.runelite.api.gameval.VarbitID;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetConfig;
 import net.runelite.api.widgets.WidgetPositionMode;
@@ -339,7 +338,7 @@ public class BaMinigamePlugin extends Plugin
 		images.clear();
 		rolePoints.clear();
 
-		disableRunnerTickTimer(true);
+		disableRunnerTickTimer();
 		removeDeathTimesInfoBoxes();
 		removeRolePointsInfoBoxes();
 		clientThread.invokeLater(this::restoreHealerTeammatesHealth);
@@ -374,6 +373,7 @@ public class BaMinigamePlugin extends Plugin
 		final String key = event.getKey();
 		final String oldValue = event.getOldValue();
 		final String newValue = event.getNewValue();
+		final boolean isClearingValue = oldValue != null && !oldValue.isEmpty() && (newValue == null || newValue.isEmpty());
 		switch (group)
 		{
 			case BARBARIAN_ASSAULT_CONFIG_GROUP:
@@ -519,7 +519,7 @@ public class BaMinigamePlugin extends Plugin
 					}
 					case "groundItemsPluginHighlightedList":
 					{
-						if (!oldValue.isEmpty() && newValue.isEmpty())
+						if (isClearingValue)
 						{
 							config.setGroundItemsPluginHighlightedList(oldValue);
 						}
@@ -527,7 +527,7 @@ public class BaMinigamePlugin extends Plugin
 					}
 					case "groundItemsPluginHiddenList":
 					{
-						if (!oldValue.isEmpty() && newValue.isEmpty())
+						if (isClearingValue)
 						{
 							config.setGroundItemsPluginHiddenList(oldValue);
 						}
@@ -535,7 +535,7 @@ public class BaMinigamePlugin extends Plugin
 					}
 					case "barbarianAssaultConfigs":
 					{
-						if (!oldValue.isEmpty() && newValue.isEmpty())
+						if (isClearingValue)
 						{
 							config.setBarbarianAssaultConfigs(oldValue);
 						}
@@ -624,7 +624,7 @@ public class BaMinigamePlugin extends Plugin
 				startWave(Role.HEALER, config.showRunnerTickTimerHealer());
 				break;
 			}
-			case InterfaceID.BA_TEAM:
+			case InterfaceID.BARBASSAULT_OVER_RECRUIT_PLAYER_NAMES:
 			{
 				loadingPlayerRoles = true;
 				break;
@@ -654,7 +654,7 @@ public class BaMinigamePlugin extends Plugin
 	@Subscribe
 	public void onWidgetClosed(WidgetClosed event)
 	{
-		if (event.getGroupId() == InterfaceID.BA_TEAM)
+		if (event.getGroupId() == InterfaceID.BARBASSAULT_OVER_RECRUIT_PLAYER_NAMES)
 		{
 			loadingPlayerRoles = false;
 		}
@@ -664,24 +664,23 @@ public class BaMinigamePlugin extends Plugin
 	public void onItemContainerChanged(ItemContainerChanged event)
 	{
 		// varbit change and widget loading are not reliable enough to start the wave timer
-
 		final ItemContainer container = event.getItemContainer();
-		if (container == client.getItemContainer(InventoryID.INVENTORY))
+		if (container == client.getItemContainer(InventoryID.INV))
 		{
 			final Item[] inventory = event.getItemContainer().getItems();
 			boolean containsRoleHorn = Arrays.stream(inventory).map(Item::getId).anyMatch(id ->
-				id == ItemID.ATTACKER_HORN
-					|| id == ItemID.ATTACKER_HORN_10517
-					|| id == ItemID.ATTACKER_HORN_10518
-					|| id == ItemID.ATTACKER_HORN_10519
-					|| id == ItemID.ATTACKER_HORN_10520
-					|| id == ItemID.DEFENDER_HORN
-					|| id == ItemID.COLLECTOR_HORN
-					|| id == ItemID.HEALER_HORN
-					|| id == ItemID.HEALER_HORN_10527
-					|| id == ItemID.HEALER_HORN_10528
-					|| id == ItemID.HEALER_HORN_10529
-					|| id == ItemID.HEALER_HORN_10530
+				id == ItemID.BARBASSAULT_ATT_HORN_01
+					|| id == ItemID.BARBASSAULT_ATT_HORN_02
+					|| id == ItemID.BARBASSAULT_ATT_HORN_03
+					|| id == ItemID.BARBASSAULT_ATT_HORN_04
+					|| id == ItemID.BARBASSAULT_ATT_HORN_05
+					|| id == ItemID.BARBASSAULT_DEFENDER_HORN
+					|| id == ItemID.BARBASSAULT_HORN_COLLECTOR
+					|| id == ItemID.BARBASSAULT_HEAL_HORN_01
+					|| id == ItemID.BARBASSAULT_HEAL_HORN_02
+					|| id == ItemID.BARBASSAULT_HEAL_HORN_03
+					|| id == ItemID.BARBASSAULT_HEAL_HORN_04
+					|| id == ItemID.BARBASSAULT_HEAL_HORN_05
 			);
 			if (containsRoleHorn && !this.containsRoleHorn)
 			{
@@ -805,7 +804,7 @@ public class BaMinigamePlugin extends Plugin
 	@Subscribe
 	public void onVarbitChanged(VarbitChanged event)
 	{
-		final int currentInGame = client.getVarbitValue(Varbits.IN_GAME_BA);
+		final int currentInGame = client.getVarbitValue(VarbitID.BARBASSAULT_AREAEXIT_PENDING);
 
 		if (inGameBit != currentInGame)
 		{
@@ -818,7 +817,7 @@ public class BaMinigamePlugin extends Plugin
 				// 0 whereas when in a real wave it changes while still in the instance.
 				final DurationMode durationMode = config.showDurationMode();
 				if ((durationMode == DurationMode.WAVE || durationMode == DurationMode.WAVE_ROUND)
-					&& wave != null && client.isInInstancedRegion())
+					&& wave != null && client.getTopLevelWorldView().isInstance())
 				{
 					announceWaveTime();
 					if (currentWave == 10)
@@ -860,7 +859,8 @@ public class BaMinigamePlugin extends Plugin
 				points = round.getRolePoints(role);
 				if (diaryBonus)
 				{
-					points *= 1.1;
+					// bonuses are rounded down to nearest int every time
+					points = (int) (points * 1.1);
 				}
 			}
 			else if (session != null && pointsCounterMode == PointsCounterMode.SESSION_POINTS)
@@ -868,7 +868,7 @@ public class BaMinigamePlugin extends Plugin
 				points = session.getRolePoints(role);
 				if (diaryBonus)
 				{
-					points *= 1.1;
+					points = (int) (points * 1.1);
 				}
 			}
 
@@ -885,7 +885,7 @@ public class BaMinigamePlugin extends Plugin
 	{
 		return config.kandarinHardDiaryPointsBonus() == KandarinDiaryBonusMode.YES
 			|| config.kandarinHardDiaryPointsBonus() == KandarinDiaryBonusMode.IF_COMPLETED &&
-			client.getVarbitValue(Varbits.DIARY_KANDARIN_HARD) == 1;
+			client.getVarbitValue(VarbitID.KANDARIN_DIARY_HARD_COMPLETE) == 1;
 	}
 
 	@Subscribe
@@ -1001,7 +1001,7 @@ public class BaMinigamePlugin extends Plugin
 	public void onGroundObjectSpawned(GroundObjectSpawned groundObjectSpawned)
 	{
 		final GroundObject groundObject = groundObjectSpawned.getGroundObject();
-		if (groundObject.getId() == ObjectID.BROKEN_TRAP0)
+		if (groundObject.getId() == ObjectID.BARBASSAULT_TRAP_BROKEN)
 		{
 			brokenTraps.add(groundObject);
 		}
@@ -1021,7 +1021,7 @@ public class BaMinigamePlugin extends Plugin
 	public void onGroundObjectDespawned(GroundObjectDespawned groundObjectDespawned)
 	{
 		final GroundObject groundObject = groundObjectDespawned.getGroundObject();
-		if (groundObject.getId() == ObjectID.BROKEN_TRAP0)
+		if (groundObject.getId() == ObjectID.BARBASSAULT_TRAP_BROKEN)
 		{
 			brokenTraps.remove(groundObject);
 		}
@@ -1077,7 +1077,7 @@ public class BaMinigamePlugin extends Plugin
 			return;
 		}
 
-		final int var = client.getVarbitValue(Varbits.EQUIPPED_WEAPON_TYPE);
+		final int var = client.getVarbitValue(VarbitID.COMBAT_WEAPON_CATEGORY);
 		final AttackStyle[] styles = attackStyleUtil.getWeaponTypeStyles(var);
 
 		for (int i = 0; i < styles.length; i++)
@@ -1094,6 +1094,7 @@ public class BaMinigamePlugin extends Plugin
 			final AttackStyleWidget attackStyleWidget = AttackStyleWidget.getAttackStyles()[i];
 
 			final BaWidgetInfo attackStyleTextBaWidgetInfo = attackStyleWidget.getTextWidget();
+
 			final Widget attackStyleTextWidget = client.getWidget(attackStyleTextBaWidgetInfo.getGroupId(),
 				attackStyleTextBaWidgetInfo.getChildId());
 			if (attackStyleTextWidget != null)
@@ -1118,7 +1119,7 @@ public class BaMinigamePlugin extends Plugin
 
 		final String listen = lastListen != null ? lastListen : "";
 
-		MenuEntry[] menuEntries = client.getMenuEntries();
+		MenuEntry[] menuEntries = client.getMenu().getMenuEntries();
 		final MenuEntry entry = menuEntries[menuEntries.length - 1];
 		String entryOption = Text.removeTags(entry.getOption());
 		String entryTarget = Text.removeTags(entry.getTarget());
@@ -1149,26 +1150,25 @@ public class BaMinigamePlugin extends Plugin
 			}
 
 		}
-
-		client.setMenuEntries(menuEntries);
+		client.getMenu().setMenuEntries(menuEntries);
 	}
 
 	public Color getColorForInventoryItemId(int itemId)
 	{
 		switch (itemId)
 		{
-			case ItemID.BULLET_ARROW:
-			case ItemID.FIELD_ARROW:
-			case ItemID.BLUNT_ARROW:
-			case ItemID.BARBED_ARROW:
+			case ItemID.BARBASSAULT_BULLET_ARROW:
+			case ItemID.BARBASSAULT_FIELD_ARROW:
+			case ItemID.BARBASSAULT_BLUNT_ARROW:
+			case ItemID.BARBASSAULT_BARBED_ARROW:
 				return config.highlightArrowColor();
-			case ItemID.POISONED_TOFU:
-			case ItemID.POISONED_WORMS:
-			case ItemID.POISONED_MEAT:
+			case ItemID.BARBASSAULT_POISION_01:
+			case ItemID.BARBASSAULT_POISION_02:
+			case ItemID.BARBASSAULT_POISION_03:
 				return config.highlightPoisonColor();
-			case ItemID.CRACKERS:
-			case ItemID.TOFU:
-			case ItemID.WORMS:
+			case ItemID.BARBASSAULT_RUNNER_FOOD:
+			case ItemID.BARBASSAULT_RUNNER_FOOD2:
+			case ItemID.BARBASSAULT_RUNNER_FOOD3:
 				return config.highlightBaitColor();
 		}
 
@@ -1179,17 +1179,17 @@ public class BaMinigamePlugin extends Plugin
 	{
 		switch (itemId)
 		{
-			case ItemID.GREEN_EGG:
+			case ItemID.BARBASSAULT_EGG_01:
 				return Color.GREEN;
-			case ItemID.RED_EGG:
+			case ItemID.BARBASSAULT_EGG_02:
 				return BaMinigamePlugin.LIGHT_RED;
-			case ItemID.BLUE_EGG:
+			case ItemID.BARBASSAULT_EGG_03:
 				return BaMinigamePlugin.LIGHT_BLUE;
-			case ItemID.YELLOW_EGG:
+			case ItemID.BARBASSAULT_EGG_04:
 				return Color.YELLOW;
-			case ItemID.CRACKERS:
-			case ItemID.TOFU:
-			case ItemID.WORMS:
+			case ItemID.BARBASSAULT_RUNNER_FOOD:
+			case ItemID.BARBASSAULT_RUNNER_FOOD2:
+			case ItemID.BARBASSAULT_RUNNER_FOOD3:
 				return config.highlightGroundBaitColor();
 			case ItemID.LOGS:
 			case ItemID.HAMMER:
@@ -1207,7 +1207,7 @@ public class BaMinigamePlugin extends Plugin
 
 		final int color = attackStyleTextColor != null ? attackStyleTextColor : DEFAULT_ATTACK_STYLE_COLOR;
 
-		final int var = client.getVarbitValue(Varbits.EQUIPPED_WEAPON_TYPE);
+		final int var = client.getVarbitValue(VarbitID.COMBAT_WEAPON_CATEGORY);
 		final AttackStyle[] styles = attackStyleUtil.getWeaponTypeStyles(var);
 
 		for (int i = 0; i < styles.length; i++)
@@ -1407,7 +1407,7 @@ public class BaMinigamePlugin extends Plugin
 			if (role == Role.HEALER)
 			{
 				roleCounterIcon = waveInfoWidget.createChild(1, WidgetType.GRAPHIC);
-				roleCounterIcon.setSpriteId(SpriteID.SPELL_CURE_ME);
+				roleCounterIcon.setSpriteId(SpriteID.LunarMagicOn._19);
 				roleCounterIcon.setOriginalHeight(17);
 				roleCounterIcon.setOriginalWidth(17);
 			}
@@ -1553,38 +1553,6 @@ public class BaMinigamePlugin extends Plugin
 		}
 	}
 
-	private void removeCallChangeTimer(Wave wave)
-	{
-		if (wave == null)
-		{
-			return;
-		}
-		Role role = wave.getRole();
-		if (role == null)
-		{
-			return;
-		}
-		Widget waveInfoWidget = client.getWidget(role.getWaveInfo().getGroupId(), role.getWaveInfo().getChildId());
-		if (waveInfoWidget == null)
-		{
-			return;
-		}
-		Widget[] children = waveInfoWidget.getChildren();
-		if (children != null && children.length >= 4)
-		{
-			if (children[2] != null)
-			{
-				children[2].setHidden(true);
-				children[2] = null;
-			}
-			if (children[3] != null)
-			{
-				children[3].setHidden(true);
-				children[3] = null;
-			}
-		}
-	}
-
 	private void restoreWaveWidget(Wave wave, boolean restoreIcon)
 	{
 		if (wave == null)
@@ -1622,7 +1590,7 @@ public class BaMinigamePlugin extends Plugin
 		final Widget waveSprite = client.getWidget(role.getWaveSprite().getGroupId(), role.getWaveSprite().getChildId());
 		if (waveSprite != null)
 		{
-			waveSprite.setSpriteId(SpriteID.BARBARIAN_ASSAULT_WAVE_ICON);
+			waveSprite.setSpriteId(SpriteID.BarbassaultIcons._0);
 			waveSprite.setOriginalWidth(WAVE_ICON_WIDTH);
 			waveSprite.setOriginalX(3);
 		}
@@ -1636,7 +1604,7 @@ public class BaMinigamePlugin extends Plugin
 		groundEggs.clear();
 		groundBait.clear();
 		groundLogsHammer.clear();
-		disableRunnerTickTimer(true);
+		disableRunnerTickTimer();
 		removeDeathTimesInfoBoxes();
 		lastListen = null;
 		lastListenItemId = 0;
@@ -1663,7 +1631,6 @@ public class BaMinigamePlugin extends Plugin
 
 		announceTime(message.toString(), time);
 	}
-
 
 	private void announceRoundInfo()
 	{
@@ -1936,17 +1903,17 @@ public class BaMinigamePlugin extends Plugin
 
 	private boolean isEggItem(int itemId)
 	{
-		return itemId == ItemID.RED_EGG
-			|| itemId == ItemID.GREEN_EGG
-			|| itemId == ItemID.BLUE_EGG
-			|| itemId == ItemID.YELLOW_EGG;
+		return itemId == ItemID.BARBASSAULT_EGG_01
+			|| itemId == ItemID.BARBASSAULT_EGG_02
+			|| itemId == ItemID.BARBASSAULT_EGG_03
+			|| itemId == ItemID.BARBASSAULT_EGG_04;
 	}
 
 	private boolean isBaitItem(int itemId)
 	{
-		return itemId == ItemID.TOFU
-			|| itemId == ItemID.WORMS
-			|| itemId == ItemID.CRACKERS;
+		return itemId == ItemID.BARBASSAULT_RUNNER_FOOD
+			|| itemId == ItemID.BARBASSAULT_RUNNER_FOOD2
+			|| itemId == ItemID.BARBASSAULT_RUNNER_FOOD3;
 	}
 
 	private boolean isLogsOrHammerItem(int itemId)
@@ -1957,10 +1924,10 @@ public class BaMinigamePlugin extends Plugin
 
 	private boolean isHopperGameObject(int gameObjectId)
 	{
-		return gameObjectId == ObjectID.EGG_HOPPER
-			|| gameObjectId == ObjectID.EGG_HOPPER_20265
-			|| gameObjectId == ObjectID.EGG_HOPPER_20266
-			|| gameObjectId == BaObjectID.EGG_HOPPER_20267;
+		return gameObjectId == ObjectID.BARBASSAULT_EGG_LAUNCHER_BOX_EMPTY_N
+			|| gameObjectId == ObjectID.BARBASSAULT_EGG_LAUNCHER_BOX_HALF_FULL_N
+			|| gameObjectId == ObjectID.BARBASSAULT_EGG_LAUNCHER_BOX_FULL_N
+			|| gameObjectId == ObjectID.BARBASSAULT_EGG_HOPPER;
 	}
 
 	private void enableRunnerTickTimer(boolean display)
@@ -1972,16 +1939,13 @@ public class BaMinigamePlugin extends Plugin
 		runnerTickTimer.setDisplaying(display);
 	}
 
-	private void disableRunnerTickTimer(boolean remove)
+	private void disableRunnerTickTimer()
 	{
 		if (runnerTickTimer != null)
 		{
 			runnerTickTimer.setDisplaying(false);
 		}
-		if (remove)
-		{
-			runnerTickTimer = null;
-		}
+		runnerTickTimer = null;
 	}
 
 	private void showDeathTimes()
@@ -1989,19 +1953,6 @@ public class BaMinigamePlugin extends Plugin
 		List<InfoBox> infoBoxes = infoBoxManager.getInfoBoxes();
 
 		for (InfoBox infoBox : deathTimesInfoBoxes)
-		{
-			if (!infoBoxes.contains(infoBox))
-			{
-				infoBoxManager.addInfoBox(infoBox);
-			}
-		}
-	}
-
-	private void showRolePoints()
-	{
-		List<InfoBox> infoBoxes = infoBoxManager.getInfoBoxes();
-
-		for (InfoBox infoBox : rolePointsInfoBoxes.values())
 		{
 			if (!infoBoxes.contains(infoBox))
 			{

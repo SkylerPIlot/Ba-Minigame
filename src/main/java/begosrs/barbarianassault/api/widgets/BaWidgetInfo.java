@@ -26,9 +26,8 @@
 package begosrs.barbarianassault.api.widgets;
 
 import lombok.Getter;
-import net.runelite.api.widgets.InterfaceID;
+import net.runelite.api.gameval.InterfaceID;
 import net.runelite.api.widgets.Widget;
-import net.runelite.api.widgets.WidgetID;
 
 /**
  * Represents a group-child {@link Widget} relationship.
@@ -38,11 +37,11 @@ import net.runelite.api.widgets.WidgetID;
 @Getter
 public enum BaWidgetInfo
 {
-	BA_TEAM_PLAYER1_ROLE(InterfaceID.BA_TEAM, BaWidgetID.BarbarianAssault.Team.PLAYER1_ROLE),
-	BA_TEAM_PLAYER2_ROLE(InterfaceID.BA_TEAM, BaWidgetID.BarbarianAssault.Team.PLAYER2_ROLE),
-	BA_TEAM_PLAYER3_ROLE(InterfaceID.BA_TEAM, BaWidgetID.BarbarianAssault.Team.PLAYER3_ROLE),
-	BA_TEAM_PLAYER4_ROLE(InterfaceID.BA_TEAM, BaWidgetID.BarbarianAssault.Team.PLAYER4_ROLE),
-	BA_TEAM_PLAYER5_ROLE(InterfaceID.BA_TEAM, BaWidgetID.BarbarianAssault.Team.PLAYER5_ROLE),
+	BA_TEAM_PLAYER1_ROLE(InterfaceID.BARBASSAULT_OVER_RECRUIT_PLAYER_NAMES, BaWidgetID.BarbarianAssault.Team.PLAYER1_ROLE),
+	BA_TEAM_PLAYER2_ROLE(InterfaceID.BARBASSAULT_OVER_RECRUIT_PLAYER_NAMES, BaWidgetID.BarbarianAssault.Team.PLAYER2_ROLE),
+	BA_TEAM_PLAYER3_ROLE(InterfaceID.BARBASSAULT_OVER_RECRUIT_PLAYER_NAMES, BaWidgetID.BarbarianAssault.Team.PLAYER3_ROLE),
+	BA_TEAM_PLAYER4_ROLE(InterfaceID.BARBASSAULT_OVER_RECRUIT_PLAYER_NAMES, BaWidgetID.BarbarianAssault.Team.PLAYER4_ROLE),
+	BA_TEAM_PLAYER5_ROLE(InterfaceID.BARBASSAULT_OVER_RECRUIT_PLAYER_NAMES, BaWidgetID.BarbarianAssault.Team.PLAYER5_ROLE),
 
 	BA_ATTACKER_WAVE_INFO(BaWidgetID.BA_ATTACKER_GROUP_ID, BaWidgetID.BarbarianAssault.WAVE_INFO),
 	BA_ATTACKER_CALL_FLASH(BaWidgetID.BA_ATTACKER_GROUP_ID, BaWidgetID.BarbarianAssault.CALL_FLASH),

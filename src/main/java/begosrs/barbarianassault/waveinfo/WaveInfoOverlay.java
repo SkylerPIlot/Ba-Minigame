@@ -31,18 +31,17 @@ import begosrs.barbarianassault.Role;
 import begosrs.barbarianassault.Round;
 import begosrs.barbarianassault.Wave;
 import begosrs.barbarianassault.timer.TimeUnits;
+import java.awt.Dimension;
+import java.awt.Graphics2D;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
-import net.runelite.api.SpriteID;
+import net.runelite.api.gameval.SpriteID;
 import net.runelite.api.widgets.Widget;
 import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayLayer;
 import net.runelite.client.ui.overlay.OverlayPosition;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import java.awt.Dimension;
-import java.awt.Graphics2D;
 
 @Slf4j
 @Singleton
@@ -98,7 +97,7 @@ public class WaveInfoOverlay extends Overlay
 			final Widget waveSprite = client.getWidget(role.getWaveSprite().getGroupId(), role.getWaveSprite().getChildId());
 			if (waveSprite != null)
 			{
-				waveSprite.setSpriteId(wave.isComplete() ? SpriteID.OPTIONS_ROUND_CHECK_BOX_CHECKED : SpriteID.OPTIONS_ROUND_CHECK_BOX);
+				waveSprite.setSpriteId(wave.isComplete() ? SpriteID.OptionsRadioButtons._2 : SpriteID.OptionsRadioButtons._0);
 				waveSprite.setOriginalWidth(BaMinigamePlugin.WAVE_CHECKMARK_ICON_WIDTH);
 				waveSprite.setOriginalX(WAVE_CHECKMARK_ORIGINAL_X);
 			}
