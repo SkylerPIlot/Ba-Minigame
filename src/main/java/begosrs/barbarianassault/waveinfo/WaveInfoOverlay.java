@@ -87,7 +87,16 @@ public class WaveInfoOverlay extends Overlay
 			{
 				final TimeUnits units = config.timeUnits();
 				final String waveTime = String.format(units.getFormatString(), wave.getTimeElapsed(true, units));
-				waveText.setText("Wave " + wave.getNumber() + " / " + waveTime);
+				String waveTextString = "Wave " + wave.getNumber() + " / " + waveTime;
+				if (config.showRunnerTickTimerAttacker() && role == Role.ATTACKER ||
+					config.showRunnerTickTimerDefender() && role == Role.DEFENDER ||
+					config.showRunnerTickTimerHealer() && role == Role.HEALER ||
+					config.showRunnerTickTimerCollector() && role == Role.COLLECTOR)
+				{
+					int currentTick = (wave.getTimer() != null ? wave.getTimer().getCurrentWaveTick(true) : 0) % 10;
+					waveTextString += " (" + currentTick + ")";
+				}
+				waveText.setText(waveTextString);
 			}
 		}
 

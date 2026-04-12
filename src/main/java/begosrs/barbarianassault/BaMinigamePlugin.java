@@ -50,8 +50,6 @@ import begosrs.barbarianassault.points.RolePointsInfoBox;
 import begosrs.barbarianassault.points.RolePointsOverlay;
 import begosrs.barbarianassault.points.RolePointsTrackingMode;
 import begosrs.barbarianassault.teamhealthbar.TeamHealthBarOverlay;
-import begosrs.barbarianassault.ticktimer.RunnerTickTimer;
-import begosrs.barbarianassault.ticktimer.RunnerTickTimerOverlay;
 import begosrs.barbarianassault.timer.DurationMode;
 import begosrs.barbarianassault.timer.TimeUnits;
 import begosrs.barbarianassault.timer.Timer;
@@ -234,8 +232,6 @@ public class BaMinigamePlugin extends Plugin
 	@Inject
 	private HoppersOverlay hoppersOverlay;
 	@Inject
-	private RunnerTickTimerOverlay runnerTickTimerOverlay;
-	@Inject
 	private TeamHealthBarOverlay teamHealthBarOverlay;
 	@Inject
 	private BaMinigameInputListener inputListener;
@@ -243,8 +239,6 @@ public class BaMinigamePlugin extends Plugin
 	private RolePointsOverlay rolePointsOverlay;
 	@Inject
 	private BrokenTrapsOverlay brokenTrapsOverlay;
-	@Getter
-	private RunnerTickTimer runnerTickTimer;
 	@Getter
 	private int inGameBit;
 	@Getter(AccessLevel.PACKAGE)
@@ -295,7 +289,6 @@ public class BaMinigamePlugin extends Plugin
 		overlayManager.add(inventoryOverlay);
 		overlayManager.add(groundItemsOverlay);
 		overlayManager.add(hoppersOverlay);
-		overlayManager.add(runnerTickTimerOverlay);
 		overlayManager.add(teamHealthBarOverlay);
 		overlayManager.add(rolePointsOverlay);
 		overlayManager.add(brokenTrapsOverlay);
@@ -320,7 +313,6 @@ public class BaMinigamePlugin extends Plugin
 		overlayManager.remove(inventoryOverlay);
 		overlayManager.remove(groundItemsOverlay);
 		overlayManager.remove(hoppersOverlay);
-		overlayManager.remove(runnerTickTimerOverlay);
 		overlayManager.remove(teamHealthBarOverlay);
 		overlayManager.remove(rolePointsOverlay);
 		overlayManager.remove(brokenTrapsOverlay);
@@ -338,7 +330,6 @@ public class BaMinigamePlugin extends Plugin
 		images.clear();
 		rolePoints.clear();
 
-		disableRunnerTickTimer();
 		removeDeathTimesInfoBoxes();
 		removeRolePointsInfoBoxes();
 		clientThread.invokeLater(this::restoreHealerTeammatesHealth);
@@ -435,30 +426,6 @@ public class BaMinigamePlugin extends Plugin
 								setWaveWidgets(wave);
 							});
 						}
-						break;
-					}
-					case "showRunnerTickTimerAttacker":
-					{
-						final boolean display = config.showRunnerTickTimerAttacker() && inGameBit == 1 && getRole() == Role.ATTACKER;
-						enableRunnerTickTimer(display);
-						break;
-					}
-					case "showRunnerTickTimerDefender":
-					{
-						final boolean display = config.showRunnerTickTimerDefender() && inGameBit == 1 && getRole() == Role.DEFENDER;
-						enableRunnerTickTimer(display);
-						break;
-					}
-					case "showRunnerTickTimerCollector":
-					{
-						final boolean display = config.showRunnerTickTimerCollector() && inGameBit == 1 && getRole() == Role.COLLECTOR;
-						enableRunnerTickTimer(display);
-						break;
-					}
-					case "showRunnerTickTimerHealer":
-					{
-						final boolean display = config.showRunnerTickTimerHealer() && inGameBit == 1 && getRole() == Role.HEALER;
-						enableRunnerTickTimer(display);
 						break;
 					}
 					case "deathTimesMode":
@@ -606,22 +573,22 @@ public class BaMinigamePlugin extends Plugin
 			}
 			case BaWidgetID.BA_ATTACKER_GROUP_ID:
 			{
-				startWave(Role.ATTACKER, config.showRunnerTickTimerAttacker());
+				startWave(Role.ATTACKER);
 				break;
 			}
 			case BaWidgetID.BA_DEFENDER_GROUP_ID:
 			{
-				startWave(Role.DEFENDER, config.showRunnerTickTimerDefender());
+				startWave(Role.DEFENDER);
 				break;
 			}
 			case BaWidgetID.BA_COLLECTOR_GROUP_ID:
 			{
-				startWave(Role.COLLECTOR, config.showRunnerTickTimerCollector());
+				startWave(Role.COLLECTOR);
 				break;
 			}
 			case BaWidgetID.BA_HEALER_GROUP_ID:
 			{
-				startWave(Role.HEALER, config.showRunnerTickTimerHealer());
+				startWave(Role.HEALER);
 				break;
 			}
 			case InterfaceID.BARBASSAULT_OVER_RECRUIT_PLAYER_NAMES:
@@ -684,7 +651,7 @@ public class BaMinigamePlugin extends Plugin
 			);
 			if (containsRoleHorn && !this.containsRoleHorn)
 			{
-				startWave(null, false);
+				startWave(null);
 			}
 			this.containsRoleHorn = containsRoleHorn;
 		}
@@ -830,7 +797,7 @@ public class BaMinigamePlugin extends Plugin
 			}
 			else
 			{
-				startWave(null, false);
+				startWave(null);
 			}
 		}
 
@@ -945,10 +912,6 @@ public class BaMinigamePlugin extends Plugin
 					lastListen = currentListen;
 					lastListenItemId = role.getListenItemId(client);
 				}
-			}
-			if (runnerTickTimer != null)
-			{
-				runnerTickTimer.incrementCount();
 			}
 		}
 		else if (loadingPlayerRoles)
@@ -1310,7 +1273,7 @@ public class BaMinigamePlugin extends Plugin
 	}
 
 	// wave starts when ba ingamebit == 1 (without role set) or when ba widgets are loaded (with role set)
-	private void startWave(Role role, boolean displayTickTimer)
+	private void startWave(Role role)
 	{
 		// Prevent changing waves when a wave is already set, as widgets can be
 		// loaded multiple times in game from eg. opening and closing the horn
@@ -1326,7 +1289,6 @@ public class BaMinigamePlugin extends Plugin
 				{
 					setHealerTeammatesHealthDisplay();
 				}
-				runnerTickTimer.setDisplaying(displayTickTimer);
 				clientThread.invokeLater(() -> setWaveWidgets(wave));
 			}
 			return;
@@ -1344,8 +1306,6 @@ public class BaMinigamePlugin extends Plugin
 		timer.setWaveStartTime();
 		wave = new Wave(client, currentWave, playerRoles, timer);
 		wave.setRole(role);
-		runnerTickTimer = new RunnerTickTimer();
-		runnerTickTimer.setDisplaying(displayTickTimer);
 		correctedCallCount = 0;
 
 		if (role != null)
@@ -1604,7 +1564,6 @@ public class BaMinigamePlugin extends Plugin
 		groundEggs.clear();
 		groundBait.clear();
 		groundLogsHammer.clear();
-		disableRunnerTickTimer();
 		removeDeathTimesInfoBoxes();
 		lastListen = null;
 		lastListenItemId = 0;
@@ -1928,24 +1887,6 @@ public class BaMinigamePlugin extends Plugin
 			|| gameObjectId == ObjectID.BARBASSAULT_EGG_LAUNCHER_BOX_HALF_FULL_N
 			|| gameObjectId == ObjectID.BARBASSAULT_EGG_LAUNCHER_BOX_FULL_N
 			|| gameObjectId == ObjectID.BARBASSAULT_EGG_HOPPER;
-	}
-
-	private void enableRunnerTickTimer(boolean display)
-	{
-		if (runnerTickTimer == null)
-		{
-			runnerTickTimer = new RunnerTickTimer();
-		}
-		runnerTickTimer.setDisplaying(display);
-	}
-
-	private void disableRunnerTickTimer()
-	{
-		if (runnerTickTimer != null)
-		{
-			runnerTickTimer.setDisplaying(false);
-		}
-		runnerTickTimer = null;
 	}
 
 	private void showDeathTimes()
