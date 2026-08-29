@@ -182,8 +182,8 @@ public class BaMinigamePlugin extends Plugin
 	private static final BaWidgetInfo[] TEAM_PLAYERS_ROLES_WIDGETS = {
 		BaWidgetInfo.BA_TEAM_PLAYER1_ROLE, BaWidgetInfo.BA_TEAM_PLAYER2_ROLE, BaWidgetInfo.BA_TEAM_PLAYER3_ROLE,
 		BaWidgetInfo.BA_TEAM_PLAYER4_ROLE, BaWidgetInfo.BA_TEAM_PLAYER5_ROLE
-    private static final Pattern TEXT_MACRO_PATTERN = Pattern.compile("@[^@]+@");
 	};
+    private static final Pattern TEXT_MACRO_PATTERN = Pattern.compile("@[^@]+@");
 	@Getter
 	private final List<GameObject> hoppers = new ArrayList<>(2);
 	@Getter
@@ -1089,6 +1089,11 @@ public class BaMinigamePlugin extends Plugin
 		final MenuEntry entry = menuEntries[menuEntries.length - 1];
 		String entryOption = removeTextFormatting(entry.getOption());
 		String entryTarget = removeTextFormatting(entry.getTarget());
+
+        log.debug("Raw option: {}", entry.getOption());
+        log.debug("Raw target: {}", entry.getTarget());
+        log.debug("Clean option: {}", removeTextFormatting(entry.getOption()));
+        log.debug("Clean target: {}", removeTextFormatting(entry.getTarget()));
 
 		final MenuHighlightMode mode = config.menuHighlightMode();
 
@@ -2268,7 +2273,7 @@ public class BaMinigamePlugin extends Plugin
 		}
 	}
 
-    private void removeTextFormatting(String text)
+    private static String removeTextFormatting(String text)
     {
         return TEXT_MACRO_PATTERN.matcher(Text.removeTags(text)).replaceAll("");
     }
