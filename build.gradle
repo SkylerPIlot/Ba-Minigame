@@ -14,7 +14,7 @@ repositories {
 }
 
 def runeLiteVersion = 'latest.release'
-def pluginMainClass = 'begosrs.barbarianassaultl.BaMinigamePluginTest'
+def pluginMainClass = 'begosrs.barbarianassault.BaMinigamePluginTest'
 
 dependencies {
     compileOnly group: 'net.runelite', name:'client', version: runeLiteVersion
