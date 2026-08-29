@@ -182,6 +182,7 @@ public class BaMinigamePlugin extends Plugin
 	private static final BaWidgetInfo[] TEAM_PLAYERS_ROLES_WIDGETS = {
 		BaWidgetInfo.BA_TEAM_PLAYER1_ROLE, BaWidgetInfo.BA_TEAM_PLAYER2_ROLE, BaWidgetInfo.BA_TEAM_PLAYER3_ROLE,
 		BaWidgetInfo.BA_TEAM_PLAYER4_ROLE, BaWidgetInfo.BA_TEAM_PLAYER5_ROLE
+    private static final Pattern TEXT_MACRO_PATTERN = Pattern.compile("@[^@]+@");
 	};
 	@Getter
 	private final List<GameObject> hoppers = new ArrayList<>(2);
@@ -661,11 +662,13 @@ public class BaMinigamePlugin extends Plugin
 	public void onChatMessage(ChatMessage chatMessage)
 	{
 		final ChatMessageType type = chatMessage.getType();
-		// for some reason, the 'All of the Penance ... have been killed' are WELCOME messages for Healer/Collector/Defender roles
+		/* for some reason, the 'All of the Penance ... have been killed' are WELCOME messages for Healer/Collector/Defender roles
+         * UPDATE: No, they are ChatMessageType.GAMEMESSAGE, not sure where this info came from
 		if (type != ChatMessageType.GAMEMESSAGE && type != ChatMessageType.WELCOME)
 		{
 			return;
 		}
+        */
 
 		final String message = chatMessage.getMessage();
 		if (message.startsWith("---- Wave:"))
@@ -697,13 +700,13 @@ public class BaMinigamePlugin extends Plugin
 			else if (config.highlightNotification() && message.contains("the wrong type of poisoned food to use"))
 			{
 				final MessageNode messageNode = chatMessage.getMessageNode();
-				final String nodeValue = Text.removeTags(messageNode.getValue());
+                final String nodeValue = Text.removeTags(messageNode.getValue());
 				messageNode.setValue(ColorUtil.wrapWithColorTag(nodeValue, config.highlightNotificationColor()));
 			}
 			else if (wave != null && message.startsWith("All of the Penance "))
 			{
 				final MessageNode node = chatMessage.getMessageNode();
-				String nodeValue = Text.removeTags(node.getValue());
+                String nodeValue = removeTextFormatting(node.getValue());
 				Color deathColor = FIGHTER_DEATH_COLOR;
 				final String npc = nodeValue.split(" ")[4];
 
@@ -1084,8 +1087,8 @@ public class BaMinigamePlugin extends Plugin
 
 		MenuEntry[] menuEntries = client.getMenu().getMenuEntries();
 		final MenuEntry entry = menuEntries[menuEntries.length - 1];
-		String entryOption = Text.removeTags(entry.getOption());
-		String entryTarget = Text.removeTags(entry.getTarget());
+		String entryOption = removeTextFormatting(entry.getOption());
+		String entryTarget = removeTextFormatting(entry.getTarget());
 
 		final MenuHighlightMode mode = config.menuHighlightMode();
 
@@ -2264,4 +2267,9 @@ public class BaMinigamePlugin extends Plugin
 			clientThread.invokeLater(() -> updateRolePoints(false));
 		}
 	}
+
+    private void removeTextFormatting(String text)
+    {
+        return TEXT_MACRO_PATTERN.matcher(Text.removeTags(text)).replaceAll("");
+    }
 }
