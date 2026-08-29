@@ -1087,13 +1087,24 @@ public class BaMinigamePlugin extends Plugin
 
 		MenuEntry[] menuEntries = client.getMenu().getMenuEntries();
 		final MenuEntry entry = menuEntries[menuEntries.length - 1];
+
 		String entryOption = removeTextFormatting(entry.getOption());
 		String entryTarget = removeTextFormatting(entry.getTarget());
 
-        log.debug("Raw option: {}", entry.getOption());
-        log.debug("Raw target: {}", entry.getTarget());
-        log.debug("Clean option: {}", removeTextFormatting(entry.getOption()));
-        log.debug("Clean target: {}", removeTextFormatting(entry.getTarget()));
+        if (rawOption.contains("Accurate")
+            || rawOption.contains("Aggressive")
+            || rawOption.contains("Controlled")
+            || rawOption.contains("Defensive")
+            || rawTarget.contains("Accurate")
+            || rawTarget.contains("Aggressive")
+            || rawTarget.contains("Controlled")
+            || rawTarget.contains("Defensive"))
+        {
+            log.debug("Raw option: {}", entry.getOption());
+            log.debug("Raw target: {}", entry.getTarget());
+            log.debug("Clean option: {}", removeTextFormatting(entry.getOption()));
+            log.debug("Clean target: {}", removeTextFormatting(entry.getTarget()));
+        }
 
 		final MenuHighlightMode mode = config.menuHighlightMode();
 
