@@ -36,7 +36,6 @@ tasks.register('run', JavaExec) {
 }
 
 group = 'begosrs.barbarianassault'
-version = '1.73.1'
 sourceCompatibility = '1.8'
 
 tasks.withType(JavaCompile).configureEach {
