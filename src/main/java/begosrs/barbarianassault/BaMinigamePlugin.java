@@ -183,7 +183,6 @@ public class BaMinigamePlugin extends Plugin
 		BaWidgetInfo.BA_TEAM_PLAYER1_ROLE, BaWidgetInfo.BA_TEAM_PLAYER2_ROLE, BaWidgetInfo.BA_TEAM_PLAYER3_ROLE,
 		BaWidgetInfo.BA_TEAM_PLAYER4_ROLE, BaWidgetInfo.BA_TEAM_PLAYER5_ROLE
 	};
-    private static final Pattern TEXT_MACRO_PATTERN = Pattern.compile("@[^@]+@");
 	@Getter
 	private final List<GameObject> hoppers = new ArrayList<>(2);
 	@Getter
@@ -2272,8 +2271,8 @@ public class BaMinigamePlugin extends Plugin
 		}
 	}
 
-    private static String removeTextFormatting(String text)
+    private String removeTextFormatting(String text)
     {
-        return TEXT_MACRO_PATTERN.matcher(Text.removeTags(text)).replaceAll("");
+        return Text.removeTags(client.macroExpand(text));
     }
 }

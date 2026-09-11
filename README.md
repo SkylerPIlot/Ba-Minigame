@@ -269,3 +269,12 @@ The session will automatically reset after the given time, during which no waves
 
 ### Diary bonus
 Include Kandarin hard diary +10% point bonus when displaying role points 
+
+---
+## Debug RuneLite:
+To dump your Jagex account creds pass the flag `--insecure-write-credentials` to the client arguments of the RuneLite launcher you are using.
+If you're on Linux, run `--configure` with the launcher to add this, otherwise if Windows, good luck mate.
+
+Locate the dumped properties file in your `.runelite/profiles{0-9}/` dir, usually named after the character you logged in with and ending with .properties.
+
+Copy that to your homedir and run debug mode here with ./gradlew run
